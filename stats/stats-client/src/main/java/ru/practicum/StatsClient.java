@@ -8,6 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 @Service
 public class StatsClient extends Client{
 
@@ -22,7 +28,24 @@ public class StatsClient extends Client{
     }
 
     public ResponseEntity<Object> createHit(HitDto hitDto) {
-        String path = "/hit";
-        return post(path, hitDto);
+        return post("/hit", hitDto);
+    }
+
+    public ResponseEntity<Object> getStats(LocalDateTime start,
+                                           LocalDateTime end,
+                                           Optional<List<String>> uri,
+                                           boolean unique) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        Map<String, Object> parameters = Map.of(
+                    "start", start.format(formatter),
+                    "end", end.format(formatter),
+                    "uri", uri.get(),
+                    "unique", unique
+            );
+
+        String path = "/stats?start={start}&end={end}&uri={uri}&unique={unique}";
+        return get(path, parameters);
     }
 }
