@@ -23,11 +23,22 @@ services:
 
 
   ewm-service:
-
+    build: service
+    image: ewm-service
+    container_name: service_container
     ports:
       - "8080:8080"
-
+    depends_on:
+      - ewm-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/stats
 
   ewm-db:
     image: postgres:15.0-alpine
-
+    container_name: db-stats
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=stats
+      - POSTGRES_USER=stat
+      - POSTGRES_PASSWORD=stat
