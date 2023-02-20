@@ -37,6 +37,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/stats
       - POSTGRES_USER=stat
       - POSTGRES_PASSWORD=stat
+      - SERVICES_STATSSERVER_URL=http://stats-server:9090
 
   ewm-db:
     image: postgres:15.0-alpine
