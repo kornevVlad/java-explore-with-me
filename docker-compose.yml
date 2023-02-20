@@ -15,7 +15,7 @@ services:
         - POSTGRES_PASSWORD=stat
 
   stats-db:
-    image: postgres:15.0-alpine
+    image: postgres:15.0
     container_name: db-stats
     ports:
         - "6541:5432"
@@ -43,7 +43,7 @@ services:
       - SERVICES_STATSSERVER_URL=http://stats-server:9090
 
   ewm-db:
-    image: postgres:15.0-alpine
+    image: postgres:15.0
     container_name: db-ewm-service
     ports:
       - "6542:5432"
