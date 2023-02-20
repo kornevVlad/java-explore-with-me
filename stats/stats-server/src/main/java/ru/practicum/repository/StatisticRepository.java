@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface StatisticRepository extends JpaRepository <Hit, Long> {
+public interface StatisticRepository extends JpaRepository<Hit, Long> {
 
     @Query(value = "SELECT new ru.practicum.model.Stats(hits.app, hits.uri, COUNT(hits.ip)) "
             + "FROM Hit AS hits "
