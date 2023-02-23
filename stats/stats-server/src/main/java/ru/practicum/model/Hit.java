@@ -1,17 +1,16 @@
 package ru.practicum.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
-@Table(name = "hits")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "hits")
 public class Hit {
 
     @Id
@@ -30,5 +29,5 @@ public class Hit {
 
     @Column(name = "timestamp")
     private LocalDateTime timestamp; //Дата и время, когда был совершен запрос к
-                                // эндпоинту (в формате "yyyy-MM-dd HH:mm:ss")
+    // эндпоинту (в формате "yyyy-MM-dd HH:mm:ss")
 }
