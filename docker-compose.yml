@@ -1,48 +1,46 @@
 version: '3.1'
 services:
-
-  stats-db:
-    image: postgres:14-alpine
-    container_name: stats-db
-    environment:
-      - POSTGRES_DB=stats
-      - POSTGRES_USER=stat
-      - POSTGRES_PASSWORD=stat
-    volumes:
-      - /var/lib/postgresql/data/
-
   stats-server:
     build: stats/stats-server
-    image: stats-server
-    container_name: stats_container
+    container_name: ewm-stats-server
     ports:
       - "9090:9090"
     depends_on:
       - stats-db
     environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
-        - POSTGRES_USER=stat
-        - POSTGRES_PASSWORD=stat
-
-
-  ewm-service:
-    build: ewm-service
-    image: ewm-service
-    container_name: service_container
-    ports:
-      - "8080:8080"
-    depends_on:
-      - ewm-db
-      - stats-server
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/service
+      - DB_NAME=stats
+      - DB_HOST=stats-db
+      - DB_PORT=5432
       - POSTGRES_USER=stat
       - POSTGRES_PASSWORD=stat
 
+  stats-db:
+    image: postgres:14-alpine
+    container_name: stats-db
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=stats
+      - POSTGRES_USER=stat
+      - POSTGRES_PASSWORD=stat
+    volumes:
+      - ./init/schema.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - /var/lib/postgresql/data/
+
+  ewm-service:
+    build: ewm-service
+    container_name: ewm-main-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - stats-server
+      - ewm-db
 
   ewm-db:
     image: postgres:14-alpine
-    container_name: db-ewm-service
+    container_name: ewm-db
+    ports:
+      - "6542:5432"
     environment:
       - POSTGRES_DB=service
       - POSTGRES_USER=stat
