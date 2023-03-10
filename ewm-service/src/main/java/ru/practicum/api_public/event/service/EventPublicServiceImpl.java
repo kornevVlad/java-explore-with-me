@@ -66,7 +66,7 @@ public class EventPublicServiceImpl implements EventPublicService {
         List<Event> events;
         List<EventShortDto> eventShortDtos = new ArrayList<>();
         QEvent qEvent = QEvent.event;
-        BooleanExpression booleanExpression = qEvent.state.eq(String.valueOf(StatusEvent.PUBLISHED));
+        BooleanExpression booleanExpression = qEvent.state.eq(StatusEvent.PUBLISHED);
         if (text != null) {
             booleanExpression = booleanExpression.and(qEvent.annotation.containsIgnoreCase(text)
                             .or(qEvent.description.containsIgnoreCase(text)));

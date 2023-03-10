@@ -116,7 +116,7 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     @Override
     public List<EventFullDto> getAllEventsByFilter(List<Long> users,
-                                                   List<String> states,
+                                                   List<StatusEvent> states,
                                                    List<Long> categories,
                                                    String rangeStart,
                                                    String rangeEnd,

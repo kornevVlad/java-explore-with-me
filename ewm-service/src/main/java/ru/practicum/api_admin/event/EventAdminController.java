@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.api_admin.event.service.EventAdminService;
 import ru.practicum.model_package.event.dto.EventFullDto;
 import ru.practicum.model_package.event.dto.UpdateEventAdminRequestDto;
+import ru.practicum.model_package.event.status_event.StatusEvent;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class EventAdminController {
      */
    @GetMapping
     public List<EventFullDto> getAllEventsByFilter(@RequestParam(required = false) List<Long> users,
-                                                   @RequestParam(required = false) List<String> states,
+                                                   @RequestParam(required = false) List<StatusEvent> states,
                                                    @RequestParam(required = false) List<Long> categories,
                                                    @RequestParam(required = false) String rangeStart,
                                                    @RequestParam(required = false) String rangeEnd,
