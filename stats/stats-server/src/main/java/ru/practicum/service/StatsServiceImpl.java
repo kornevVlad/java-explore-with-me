@@ -29,6 +29,9 @@ public class StatsServiceImpl implements StatsService {
         this.statsMapper = statsMapper;
     }
 
+    /**
+     *Сохраненеие статистики по model Hit
+     */
     @Override
     public HitDto createHit(HitDto hitDto) {
         Hit hit = statsMapper.toHit(hitDto);
@@ -37,6 +40,9 @@ public class StatsServiceImpl implements StatsService {
         return statsMapper.toHitDto(hit);
     }
 
+    /**
+     *Получение списка статиски с уникланым ip и без уникального ip
+     */
     @Override
     public List<Stats> getStats(String start, String end, List<String> uris, Boolean unique) {
         log.info("Get параметры в сервисе start={}, end={}, unique={}",start,end,unique);
@@ -53,6 +59,9 @@ public class StatsServiceImpl implements StatsService {
         return statsList;
     }
 
+    /**
+     *конвертер даты и времени String в LocalDateTime
+     */
     private LocalDateTime getTimeDecoder(String dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(URLDecoder.decode(dateTime, StandardCharsets.UTF_8), formatter);

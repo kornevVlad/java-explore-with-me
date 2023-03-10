@@ -35,6 +35,13 @@ services:
     depends_on:
       - stats-server
       - ewm-db
+    environment:
+      - DB_NAME=service
+      - DB_HOST=ewm-db
+      - DB_PORT=5432
+      - POSTGRES_USER=stat
+      - POSTGRES_PASSWORD=stat
+      - SERVICES_STATSERVICE_URI=http://stats-server:9090
 
   ewm-db:
     image: postgres:14-alpine
@@ -46,4 +53,5 @@ services:
       - POSTGRES_USER=stat
       - POSTGRES_PASSWORD=stat
     volumes:
+      - ./init/schema_service.sql:/docker-entrypoint-initdb.d/create_tables.sql
       - /var/lib/postgresql/data/
