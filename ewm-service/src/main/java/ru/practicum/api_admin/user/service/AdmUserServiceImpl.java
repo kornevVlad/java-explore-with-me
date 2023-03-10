@@ -60,7 +60,6 @@ public class AdmUserServiceImpl implements AdmUserService {
             for (User user : users) {
                 usersDto.add(userMapper.toUserDto(user));
             }
-            log.info("Получен список пользователей users = {}", usersDto);
         } else {
             throw new BadRequestException("Failed to convert value of type java.lang.String" +
                     " to required type int; nested exception is java.lang.NumberFormatException:" +
