@@ -141,7 +141,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                     " could not execute statement");
         }
         //Запрос отправляется толь на опубликованные события
-        if (!event.getState().equals(StatusEvent.PUBLISHED)) {
+        if (!event.getState().equals(status)) {
             log.error("Запрос отправляется толь на опубликованные события");
             throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_request];" +
                     " nested exception is org.hibernate.exception.ConstraintViolationException:" +

@@ -127,7 +127,7 @@ public class UserEventServiceImpl implements UserEventService {
         Event event = validEvent(eventId);
         validUser(userId);
         //Проверка подходящих статусов
-        if ((!event.getState().equals(StatusEvent.PENDING))/* & (!event.getState().equals(AdminStatusEvent.REJECT_EVENT))*/) {
+        if (!(event.getState().equals(StatusEvent.PENDING)) & !(event.getState().equals(StatusEvent.CANCELED))) {
             throw new ConflictException("Only pending or canceled events can be changed");
         }
         if (updateEventUserRequestDto.getAnnotation() != null) {
@@ -208,8 +208,14 @@ public class UserEventServiceImpl implements UserEventService {
                         if (!request.getStatus().equals(StatusRequest.CONFIRMED)) {
                             //подтверждать только в статусе PENDING
                             if (request.getStatus().equals(StatusRequest.PENDING)) {
-                                request.setStatus(StatusRequest.CONFIRMED);
-                                statusResult.getConfirmedRequests().add(requestMapper.toParticipationRequestDto(request));
+                                request.setStatus(ids.getStatus());
+                                if (request.getStatus().equals(StatusRequest.CONFIRMED)) {
+                                    statusResult.getConfirmedRequests().add(requestMapper.toParticipationRequestDto(request));
+                                }
+                                if (request.getStatus().equals(StatusRequest.REJECTED)) {
+                                    request.setStatus(StatusRequest.REJECTED);
+                                    statusResult.getRejectedRequests().add(requestMapper.toParticipationRequestDto(request));
+                                }
                             }
                         }
                     } else if (event.getParticipantLimit() < events.size()) {

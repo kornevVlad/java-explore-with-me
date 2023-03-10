@@ -53,11 +53,6 @@ public class EventAdminServiceImpl implements EventAdminService {
     @Override
     public EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequestDto updateEventAdminRequestDto) {
         Event event = validEvent(eventId);
-        if (event.getState().equals(StatusEvent.PUBLISHED)) {
-            if (updateEventAdminRequestDto.getStateAction().equals(AdminStatusEvent.REJECT_EVENT)) {
-                throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
-            }
-        }
         if (updateEventAdminRequestDto.getAnnotation() != null) {
             event.setAnnotation(updateEventAdminRequestDto.getAnnotation());
         }
@@ -90,21 +85,18 @@ public class EventAdminServiceImpl implements EventAdminService {
             event.setRequestModeration(updateEventAdminRequestDto.getRequestModeration());
         }
         if (updateEventAdminRequestDto.getStateAction() != null) {
+            //опубликованное событие не изменяется администратором
             if (event.getState().equals(StatusEvent.PUBLISHED)) {
-                if (updateEventAdminRequestDto.getStateAction().equals(AdminStatusEvent.REJECT_EVENT)) {
-                    throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
-                }
-            }
-            if (event.getState().equals(generateState(AdminStatusEvent.REJECT_EVENT))) {
-                if (updateEventAdminRequestDto.getStateAction().equals(AdminStatusEvent.PUBLISH_EVENT)) {
-                    throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
-                }
-            }
-            if (event.getState().equals(generateState(updateEventAdminRequestDto.getStateAction()))) {
                 throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
             }
-            StatusEvent state = generateState(updateEventAdminRequestDto.getStateAction());
-            event.setState(state);
+            // 409 при изменении завершенного события
+            if (event.getState().equals(StatusEvent.CANCELED)) {
+                throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
+            }
+            //изменить статус можно только у события в статусе ожидания
+            if (event.getState().equals(StatusEvent.PENDING)) {
+                event.setState(generateState(updateEventAdminRequestDto.getStateAction()));
+            }
         }
         if (updateEventAdminRequestDto.getTitle() != null) {
             event.setTitle(updateEventAdminRequestDto.getTitle());
@@ -127,7 +119,6 @@ public class EventAdminServiceImpl implements EventAdminService {
         Pageable pageable = PageRequest.of(from, size);
         List<Event> events = new ArrayList<>();
         List<EventFullDto> eventFullDtos = new ArrayList<>();
-        //РЕАЛИЗОВАТЬ ФИЛЬТР!!!!!!!!!!!!!!!!!!!!!!!!!
         QEvent qEvent = QEvent.event;
         BooleanExpression booleanExpression = qEvent.id.isNotNull();
         if (users != null) {
@@ -183,11 +174,8 @@ public class EventAdminServiceImpl implements EventAdminService {
             st = StatusEvent.PUBLISHED;
         }
         if (state.equals(AdminStatusEvent.REJECT_EVENT)) {
-            st = StatusEvent.PENDING;
-        }
-        /*if (state.equals("CANCEL_EVENT")) {
             st = StatusEvent.CANCELED;
-        }*/
+        }
         return st;
     }
 }
