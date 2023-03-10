@@ -18,6 +18,7 @@ import ru.practicum.model_package.event.dto.UpdateEventUserRequestDto;
 import ru.practicum.model_package.event.mapper.EventMapper;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.event.repository.EventRepository;
+import ru.practicum.model_package.event.status_event.AdminStatusEvent;
 import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.event.status_event.UserStatusEvent;
 import ru.practicum.model_package.participation_request.dto.ParticipationRequestDto;
@@ -54,15 +55,6 @@ public class UserEventServiceImpl implements UserEventService {
 
     private final EventMapper eventMapper;
 
-    private final String STATUS_CONFIRMED = "CONFIRMED"; //Подтвержден
-
-    private final String STATUS_REJECTED = "REJECTED"; //Отклонен
-
-
-
-
-
-    private final String SEND_TO_REVIEW = "SEND";
 
     public UserEventServiceImpl(UserRepository userRepository,
                                 CategoryRepository categoryRepository,
@@ -136,7 +128,7 @@ public class UserEventServiceImpl implements UserEventService {
         Event event = validEvent(eventId);
         validUser(userId);
         //Проверка подходящих статусов
-        if ((!event.getState().equals(StatusEvent.PENDING)) & (!event.getState().equals("REJECTED"))) {
+        if ((!event.getState().equals(StatusEvent.PENDING)) && (!event.getState().equals(AdminStatusEvent.REJECT_EVENT))) {
             throw new ConflictException("Only pending or canceled events can be changed");
         }
         if (updateEventUserRequestDto.getAnnotation() != null) {
