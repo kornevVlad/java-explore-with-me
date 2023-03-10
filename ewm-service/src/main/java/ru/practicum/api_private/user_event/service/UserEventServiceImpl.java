@@ -18,7 +18,6 @@ import ru.practicum.model_package.event.dto.UpdateEventUserRequestDto;
 import ru.practicum.model_package.event.mapper.EventMapper;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.event.repository.EventRepository;
-import ru.practicum.model_package.event.status_event.AdminStatusEvent;
 import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.event.status_event.UserStatusEvent;
 import ru.practicum.model_package.participation_request.dto.ParticipationRequestDto;
