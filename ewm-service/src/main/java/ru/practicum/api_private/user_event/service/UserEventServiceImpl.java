@@ -127,6 +127,9 @@ public class UserEventServiceImpl implements UserEventService {
         Event event = validEvent(eventId);
         validUser(userId);
         //Проверка подходящих статусов
+        if (updateEventUserRequestDto.getStateAction() == null) {
+            throw new ConflictException("CONFLICT STATUS NULL");
+        }
         if (updateEventUserRequestDto.getAnnotation() != null) {
             event.setAnnotation(updateEventUserRequestDto.getAnnotation());
         }
