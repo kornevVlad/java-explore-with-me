@@ -30,6 +30,7 @@ import ru.practicum.model_package.participation_request.status_request.StatusReq
 import ru.practicum.model_package.user.model.User;
 import ru.practicum.model_package.user.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -121,6 +122,7 @@ public class UserEventServiceImpl implements UserEventService {
     }
 
     @Override
+    @Transactional
     public EventFullDto updateEventByUserId(Long userId, Long eventId,
                                             UpdateEventUserRequestDto updateEventUserRequestDto) {
         log.info("Обновление события: данные для обновления = {}", updateEventUserRequestDto);
@@ -204,8 +206,22 @@ public class UserEventServiceImpl implements UserEventService {
         EventRequestStatusUpdateResult statusResult = new EventRequestStatusUpdateResult();
         for (Long id : ids.getRequestIds()) {
             ParticipationRequest request = validRequest(id);
+            if (request.getStatus().equals(StatusRequest.PENDING)) {
+                request.setStatus(ids.getStatus());
+                if (request.getStatus().equals(StatusRequest.CONFIRMED)) {
+                    statusResult.getConfirmedRequests().add(requestMapper.toParticipationRequestDto(request));
+                }
+                if (request.getStatus().equals(StatusRequest.REJECTED)) {
+                    request.setStatus(StatusRequest.REJECTED);
+                    statusResult.getRejectedRequests().add(requestMapper.toParticipationRequestDto(request));
+                }
+            } else if (request.getStatus().equals(StatusRequest.CONFIRMED)) {
+                if (ids.getStatus().equals(StatusRequest.REJECTED)) {
+                    throw new ConflictException("CONFLICT STATUS REQUEST");
+                }
+            }
             //валидация заявки по event_id
-            if (event.getId().equals(request.getEvent().getId())) {
+           /* if (event.getId().equals(request.getEvent().getId())) {
                 //Валидация user_id
                 if (user.getId().equals(event.getInitiator().getId())) {
                     List<ParticipationRequest> events = requestRepository.findAllByEventId(eventId);
@@ -230,7 +246,7 @@ public class UserEventServiceImpl implements UserEventService {
                         statusResult.getRejectedRequests().add(requestMapper.toParticipationRequestDto(request));
                     }
                 }
-            }
+            }*/
             requestRepository.save(request);
         }
         return statusResult;
@@ -283,4 +299,45 @@ public class UserEventServiceImpl implements UserEventService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(dataTime, formatter);
     }
+
+    public EventRequestStatusUpdateResult StatusRequest(Long userId, Long eventId,
+                                                              EventRequestStatusUpdateRequest ids) {
+
+        Event event = validEvent(eventId);
+        User user = validUser(userId);
+        EventRequestStatusUpdateResult statusResult = new EventRequestStatusUpdateResult();
+        for (Long id : ids.getRequestIds()) {
+            ParticipationRequest request = validRequest(id);
+            //валидация заявки по event_id
+            if (event.getId().equals(request.getEvent().getId())) {
+                //Валидация user_id
+                if (user.getId().equals(event.getInitiator().getId())) {
+                    List<ParticipationRequest> events = requestRepository.findAllByEventId(eventId);
+                    //валидация по количеству свободных мест
+                    if (event.getParticipantLimit() > events.size()) {
+                        //валидация по статусу
+                        if (!request.getStatus().equals(StatusRequest.CONFIRMED)) {
+                            //подтверждать только в статусе PENDING
+                            if (request.getStatus().equals(StatusRequest.PENDING)) {
+                                request.setStatus(ids.getStatus());
+                                if (request.getStatus().equals(StatusRequest.CONFIRMED)) {
+                                    statusResult.getConfirmedRequests().add(requestMapper.toParticipationRequestDto(request));
+                                }
+                                if (request.getStatus().equals(StatusRequest.REJECTED)) {
+                                    request.setStatus(StatusRequest.REJECTED);
+                                    statusResult.getRejectedRequests().add(requestMapper.toParticipationRequestDto(request));
+                                }
+                            }
+                        }
+                    } else if (event.getParticipantLimit() < events.size()) {
+                        request.setStatus(StatusRequest.REJECTED);
+                        statusResult.getRejectedRequests().add(requestMapper.toParticipationRequestDto(request));
+                    }
+                }
+            }
+            requestRepository.save(request);
+        }
+        return statusResult;
+    }
+
 }

@@ -1,6 +1,5 @@
 package ru.practicum.model_package.participation_request.model;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.model_package.participation_request.dto.ParticipationRequestDto;

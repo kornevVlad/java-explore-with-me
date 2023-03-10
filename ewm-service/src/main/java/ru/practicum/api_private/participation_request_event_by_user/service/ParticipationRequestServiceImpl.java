@@ -136,23 +136,17 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         //Пользователь не может создать запрос собственного события
         if (event.getInitiator().getId().equals(user.getId())) {
             log.error("Пользователь не может создать запрос собственного события");
-            throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_request];" +
-                    " nested exception is org.hibernate.exception.ConstraintViolationException:" +
-                    " could not execute statement");
+            throw new ConflictException("USER CANNOT REQUEST OWN EVENT");
         }
         //Запрос отправляется толь на опубликованные события
         if (!event.getState().equals(status)) {
             log.error("Запрос отправляется толь на опубликованные события");
-            throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_request];" +
-                    " nested exception is org.hibernate.exception.ConstraintViolationException:" +
-                    " could not execute statement");
+            throw new ConflictException("REQUEST NOT PUBLIC EVENTS");
         }
         //Лимит заявок не должен превышать лимит участников в событии
         if (requestRepository.countLim(event.getId()).equals(event.getParticipantLimit())) {
             log.error("Лимит заявок не должен превышать лимит участников в событии");
-            throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_request];" +
-                    " nested exception is org.hibernate.exception.ConstraintViolationException:" +
-                    " could not execute statement");
+            throw new ConflictException("LIMIT REQUEST IS OVER");
         }
     }
 }

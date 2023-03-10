@@ -10,7 +10,7 @@ public class EventShortDto {
     private Long id; //Идентификатор
     private String annotation; //Краткое описание
 
-    private CategoryDto categoryDto; //Категория
+    private CategoryDto category; //Категория
 
     private Long confirmedRequests; //Количество одобренных заявок на участие в данном событии
 

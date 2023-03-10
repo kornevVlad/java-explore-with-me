@@ -41,7 +41,7 @@ public class EventMapper {
         event.setPaid(newEventDto.getPaid());//Нужно ли оплачивать участие, example: true
         event.setParticipantLimit(newEventDto.getParticipantLimit());//Ограничение на количество участников.
         //event.setPublishedOn();
-        event.setRequestModeration(true);//Нужна ли пре-модерация заявок на участие
+        event.setRequestModeration(newEventDto.getRequestModeration());//Нужна ли пре-модерация заявок на участие
         event.setState(StatusEvent.PENDING);//Список состояний жизненного цикла события, PENDING при создании по умалчанию
         event.setTitle(newEventDto.getTitle());//Заголовок события
         return event;
@@ -74,7 +74,7 @@ public class EventMapper {
         EventShortDto eventShortDto = new EventShortDto();
         eventShortDto.setId(event.getId());
         eventShortDto.setAnnotation(event.getAnnotation());
-        eventShortDto.setCategoryDto(categoryMapper.toCategoryDto(event.getCategory()));
+        eventShortDto.setCategory(categoryMapper.toCategoryDto(event.getCategory()));
         eventShortDto.setConfirmedRequests(confirmed); //Количество одобренных заявок на участие в данном событии
         eventShortDto.setEventDate(generateDataTimeToString(event.getEventDate()));
         eventShortDto.setInitiator(userMapper.toUserShortDto(event.getInitiator()));

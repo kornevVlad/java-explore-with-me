@@ -67,8 +67,9 @@ public class UserEventController {
     @PatchMapping("/events/{eventId}")
     public EventFullDto updateEvent(@NotNull @PathVariable Long userId,
                                     @NotNull @PathVariable Long eventId,
-                                    @Valid @RequestBody UpdateEventUserRequestDto updateEventUserRequestDto) {
+                                    @RequestBody UpdateEventUserRequestDto updateEventUserRequestDto) {
         log.info("PATCH privateUserEvent обновление события пользователя с id={}, eventId={}", userId, eventId);
+        log.info("PATCH update = {}", updateEventUserRequestDto);
         return userEventService.updateEventByUserId(userId, eventId, updateEventUserRequestDto);
     }
 
@@ -87,11 +88,11 @@ public class UserEventController {
      * Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя
      */
     @PatchMapping("/events/{eventId}/requests")
-    public EventRequestStatusUpdateResult updateStatusRequest(@NotNull @PathVariable Long userId,
-                                                              @NotNull @PathVariable Long eventId,
-                                                              @RequestBody EventRequestStatusUpdateRequest ids) {
+    public EventRequestStatusUpdateResult updateStatusRequest(@PathVariable Long userId,
+                                                              @PathVariable Long eventId,
+                                                              @RequestBody EventRequestStatusUpdateRequest request) {
         log.info("PATCH privateUserEvent запрос изменения статуса заявок участия в событии" +
-                "пользователь={}, событие={}, список заявок={}", userId, eventId, ids);
-        return userEventService.updateStatusRequest(userId, eventId, ids);
+                "пользователь={}, событие={}, список заявок={}", userId, eventId, request);
+        return userEventService.updateStatusRequest(userId, eventId, request);
     }
 }
