@@ -8,6 +8,7 @@ import ru.practicum.model_package.event.dto.EventShortDto;
 import ru.practicum.model_package.event.dto.NewEventDto;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.event.model.Location;
+import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.user.mapper.UserMapper;
 import ru.practicum.model_package.user.model.User;
 
@@ -41,7 +42,7 @@ public class EventMapper {
         event.setParticipantLimit(newEventDto.getParticipantLimit());//Ограничение на количество участников.
         //event.setPublishedOn();
         event.setRequestModeration(true);//Нужна ли пре-модерация заявок на участие
-        event.setState("PENDING");//Список состояний жизненного цикла события, PENDING при создании по умалчанию
+        event.setState(StatusEvent.PENDING);//Список состояний жизненного цикла события, PENDING при создании по умалчанию
         event.setTitle(newEventDto.getTitle());//Заголовок события
         return event;
     }

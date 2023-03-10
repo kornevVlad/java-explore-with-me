@@ -2,6 +2,7 @@ package ru.practicum.model_package.participation_request.model;
 
 import lombok.Data;
 import ru.practicum.model_package.event.model.Event;
+import ru.practicum.model_package.participation_request.status_request.StatusRequest;
 import ru.practicum.model_package.user.model.User;
 
 import javax.persistence.*;
@@ -28,7 +29,8 @@ public class ParticipationRequest {
     @JoinColumn(name = "requester_id")
     private User requester; //Идентификатор пользователя, отправившего заявку
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status; //Статус заявки
+    private StatusRequest status; //Статус заявки
     //example: PENDING
 }

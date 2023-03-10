@@ -18,6 +18,8 @@ import ru.practicum.model_package.event.model.Event;
 
 import ru.practicum.model_package.event.model.QEvent;
 import ru.practicum.model_package.event.repository.EventRepository;
+import ru.practicum.model_package.event.status_event.AdminStatusEvent;
+import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.participation_request.repository.RequestRepository;
 
 import java.time.LocalDateTime;
@@ -51,8 +53,8 @@ public class EventAdminServiceImpl implements EventAdminService {
     @Override
     public EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequestDto updateEventAdminRequestDto) {
         Event event = validEvent(eventId);
-        if (event.getState().equals("PUBLISHED")) {
-            if (updateEventAdminRequestDto.getStateAction().equals("REJECT_EVENT")) {
+        if (event.getState().equals(StatusEvent.PUBLISHED)) {
+            if (updateEventAdminRequestDto.getStateAction().equals(AdminStatusEvent.REJECT_EVENT)) {
                 throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
             }
         }
@@ -88,20 +90,20 @@ public class EventAdminServiceImpl implements EventAdminService {
             event.setRequestModeration(updateEventAdminRequestDto.getRequestModeration());
         }
         if (updateEventAdminRequestDto.getStateAction() != null) {
-            if (event.getState().equals("PUBLISHED")) {
-                if (updateEventAdminRequestDto.getStateAction().equals("REJECT_EVENT")) {
+            if (event.getState().equals(StatusEvent.PUBLISHED)) {
+                if (updateEventAdminRequestDto.getStateAction().equals(AdminStatusEvent.REJECT_EVENT)) {
                     throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
                 }
             }
-            if (event.getState().equals(generateState("REJECT_EVENT"))) {
-                if (updateEventAdminRequestDto.getStateAction().equals("PUBLISH_EVENT")) {
+            if (event.getState().equals(generateState(AdminStatusEvent.REJECT_EVENT))) {
+                if (updateEventAdminRequestDto.getStateAction().equals(AdminStatusEvent.PUBLISH_EVENT)) {
                     throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
                 }
             }
             if (event.getState().equals(generateState(updateEventAdminRequestDto.getStateAction()))) {
                 throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
             }
-            String state = generateState(updateEventAdminRequestDto.getStateAction());
+            StatusEvent state = generateState(updateEventAdminRequestDto.getStateAction());
             event.setState(state);
         }
         if (updateEventAdminRequestDto.getTitle() != null) {
@@ -175,16 +177,16 @@ public class EventAdminServiceImpl implements EventAdminService {
         return LocalDateTime.parse(dataTime, formatter);
     }
 
-    private String generateState(String state) {
-        String st = null;
-        if (state.equals("PUBLISH_EVENT")) {
-            st = "PUBLISHED";
+    private StatusEvent generateState(AdminStatusEvent state) {
+        StatusEvent st = null;
+        if (state.equals(AdminStatusEvent.PUBLISH_EVENT)) {
+            st = StatusEvent.PUBLISHED;
         }
-        if (state.equals("REJECT_EVENT")) {
-            st = "REJECTED";
+        if (state.equals(AdminStatusEvent.REJECT_EVENT)) {
+            st = StatusEvent.PENDING;
         }
         if (state.equals("CANCEL_EVENT")) {
-            st = "CANCELED";
+            st = StatusEvent.CANCELED;
         }
         return st;
     }

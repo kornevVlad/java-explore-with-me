@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.participation_request.dto.ParticipationRequestDto;
 import ru.practicum.model_package.participation_request.model.ParticipationRequest;
+import ru.practicum.model_package.participation_request.status_request.StatusRequest;
 import ru.practicum.model_package.user.model.User;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class RequestMapper {
 
-    public ParticipationRequest toParticipationRequest(User user, Event event, String status) {
+    public ParticipationRequest toParticipationRequest(User user, Event event, StatusRequest status) {
         ParticipationRequest participationRequest = new ParticipationRequest();
         participationRequest.setCreated(LocalDateTime.now());
         participationRequest.setEvent(event);

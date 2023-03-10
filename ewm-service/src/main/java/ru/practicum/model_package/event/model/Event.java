@@ -2,6 +2,7 @@ package ru.practicum.model_package.event.model;
 
 import lombok.*;
 import ru.practicum.model_package.categories.model.Category;
+import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.user.model.User;
 
 
@@ -67,8 +68,9 @@ public class Event {
     //example: true
     //default: true
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "state")
-    private String  state; //Список состояний жизненного цикла события
+    private StatusEvent state; //Список состояний жизненного цикла события
     //example: PUBLISHED
     //Enum:[ PENDING - ожидающий, PUBLISHED - опубликованный, CANCELED - завершен ]
 

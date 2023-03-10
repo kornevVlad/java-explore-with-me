@@ -18,12 +18,15 @@ import ru.practicum.model_package.event.dto.UpdateEventUserRequestDto;
 import ru.practicum.model_package.event.mapper.EventMapper;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.event.repository.EventRepository;
+import ru.practicum.model_package.event.status_event.StatusEvent;
+import ru.practicum.model_package.event.status_event.UserStatusEvent;
 import ru.practicum.model_package.participation_request.dto.ParticipationRequestDto;
 import ru.practicum.model_package.participation_request.mapper.RequestMapper;
 import ru.practicum.model_package.participation_request.model.EventRequestStatusUpdateRequest;
 import ru.practicum.model_package.participation_request.model.EventRequestStatusUpdateResult;
 import ru.practicum.model_package.participation_request.model.ParticipationRequest;
 import ru.practicum.model_package.participation_request.repository.RequestRepository;
+import ru.practicum.model_package.participation_request.status_request.StatusRequest;
 import ru.practicum.model_package.user.model.User;
 import ru.practicum.model_package.user.repository.UserRepository;
 
@@ -55,9 +58,9 @@ public class UserEventServiceImpl implements UserEventService {
 
     private final String STATUS_REJECTED = "REJECTED"; //Отклонен
 
-    private final String STATUS_PENDING = "PENDING"; //В ожидании
 
-    private final String STATUS_CANCEL = "CANCELED"; //Завершен
+
+
 
     private final String SEND_TO_REVIEW = "SEND";
 
@@ -133,7 +136,7 @@ public class UserEventServiceImpl implements UserEventService {
         Event event = validEvent(eventId);
         validUser(userId);
         //Проверка подходящих статусов
-        if ((!event.getState().equals("PENDING")) & (!event.getState().equals("REJECTED"))) {
+        if ((!event.getState().equals(StatusEvent.PENDING)) & (!event.getState().equals("REJECTED"))) {
             throw new ConflictException("Only pending or canceled events can be changed");
         }
         if (updateEventUserRequestDto.getAnnotation() != null) {
@@ -211,15 +214,15 @@ public class UserEventServiceImpl implements UserEventService {
                     //валидация по количеству свободных мест
                     if (event.getParticipantLimit() > events.size()) {
                         //валидация по статусу
-                        if (!request.getStatus().equals(STATUS_CONFIRMED)) {
+                        if (!request.getStatus().equals(StatusRequest.CONFIRMED)) {
                             //подтверждать только в статусе PENDING
-                            if (request.getStatus().equals(STATUS_PENDING)) {
-                                request.setStatus(STATUS_CONFIRMED);
+                            if (request.getStatus().equals(StatusRequest.PENDING)) {
+                                request.setStatus(StatusRequest.CONFIRMED);
                                 statusResult.getConfirmedRequests().add(requestMapper.toParticipationRequestDto(request));
                             }
                         }
                     } else if (event.getParticipantLimit() < events.size()) {
-                        request.setStatus(STATUS_REJECTED);
+                        request.setStatus(StatusRequest.REJECTED);
                         statusResult.getRejectedRequests().add(requestMapper.toParticipationRequestDto(request));
                     }
                 }
@@ -229,15 +232,15 @@ public class UserEventServiceImpl implements UserEventService {
         return statusResult;
     }
 
-    private String generateStatus(String status) { //Обновление статусов
-        String converStatus = null;
-        if (status.equals("CANCEL_REVIEW")) {
-            converStatus = STATUS_CANCEL;
+    private StatusEvent generateStatus(UserStatusEvent status) { //Обновление статусов
+        StatusEvent st = null;
+        if (status.equals(UserStatusEvent.CANCEL_REVIEW)) {
+            st = StatusEvent.CANCELED;
         }
-        if (status.equals("SEND_TO_REVIEW")) {
-            converStatus = STATUS_PENDING;
+        if (status.equals(UserStatusEvent.SEND_TO_REVIEW)) {
+            st = StatusEvent.PENDING;
         }
-        return converStatus;
+        return st;
     }
 
     private Event validEvent(Long eventId) {

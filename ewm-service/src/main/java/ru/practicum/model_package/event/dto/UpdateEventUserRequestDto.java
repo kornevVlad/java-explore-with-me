@@ -2,6 +2,7 @@ package ru.practicum.model_package.event.dto;
 
 import lombok.Data;
 import ru.practicum.model_package.event.model.Location;
+import ru.practicum.model_package.event.status_event.UserStatusEvent;
 
 import javax.validation.constraints.Size;
 
@@ -28,7 +29,7 @@ public class UpdateEventUserRequestDto {
 
     private Boolean requestModeration; //Нужна ли пре-модерация заявок на участие
 
-    private String stateAction; //Изменение сотояния события
+    private UserStatusEvent stateAction; //Изменение сотояния события
     //Enum:
     //[ SEND_TO_REVIEW, CANCEL_REVIEW ]
 

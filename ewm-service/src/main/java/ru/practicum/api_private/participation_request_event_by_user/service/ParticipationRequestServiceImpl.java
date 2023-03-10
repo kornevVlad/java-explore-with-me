@@ -8,10 +8,12 @@ import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.event.repository.EventRepository;
+import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.participation_request.dto.ParticipationRequestDto;
 import ru.practicum.model_package.participation_request.mapper.RequestMapper;
 import ru.practicum.model_package.participation_request.model.ParticipationRequest;
 import ru.practicum.model_package.participation_request.repository.RequestRepository;
+import ru.practicum.model_package.participation_request.status_request.StatusRequest;
 import ru.practicum.model_package.user.model.User;
 import ru.practicum.model_package.user.repository.UserRepository;
 
@@ -31,12 +33,6 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
     private final RequestMapper requestMapper;
 
-    private final String STATUS_PENDING = "PENDING"; //Ожидание подтверждения запроса
-
-    private final String STATUS_CANCEL = "CANCELED"; //Отмена запроса пользователя
-
-    private final String STATUS_CONFIRMED = "CONFIRMED"; //Подтверждение запроса
-
     public ParticipationRequestServiceImpl(UserRepository userRepository,
                                            EventRepository eventRepository,
                                            RequestRepository requestRepository,
@@ -51,13 +47,13 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     public ParticipationRequestDto addRequestByUser(Long userId, Long eventId) {
         Event event = validEvent(eventId);
         User user = validUser(userId);
-        String status = "PUBLISHED";
+        StatusEvent status = StatusEvent.PUBLISHED;
         validUserAndEvent(user, event, status);
         ParticipationRequest participationRequest;
         if (!event.getRequestModeration()) {
-            participationRequest = requestMapper.toParticipationRequest(user, event, STATUS_CONFIRMED);
+            participationRequest = requestMapper.toParticipationRequest(user, event, StatusRequest.CONFIRMED);
         } else {
-            participationRequest = requestMapper.toParticipationRequest(user, event, STATUS_PENDING);
+            participationRequest = requestMapper.toParticipationRequest(user, event, StatusRequest.PENDING);
         }
         log.info("Создана заявка на участие в событии = {}", participationRequest);
         try {
@@ -87,7 +83,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
         validUser(userId);
         ParticipationRequest participationRequest = validRequestByUserId(userId, requestId);
-        participationRequest.setStatus(STATUS_CANCEL);
+        participationRequest.setStatus(StatusRequest.CANCELED);
         log.info("Статус запроса изменен ={}", participationRequest);
         return requestMapper.toParticipationRequestDto(requestRepository.save(participationRequest));
     }
@@ -136,7 +132,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     /**
      * Валидация 409 ошибка
      */
-    private void validUserAndEvent(User user, Event event, String status) {
+    private void validUserAndEvent(User user, Event event, StatusEvent status) {
         //Пользователь не может создать запрос собственного события
         if (event.getInitiator().getId().equals(user.getId())) {
             log.error("Пользователь не может создать запрос собственного события");
@@ -145,7 +141,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
                     " could not execute statement");
         }
         //Запрос отправляется толь на опубликованные события
-        if (!event.getState().equals("PUBLISHED")) {
+        if (!event.getState().equals(StatusEvent.PUBLISHED)) {
             log.error("Запрос отправляется толь на опубликованные события");
             throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_request];" +
                     " nested exception is org.hibernate.exception.ConstraintViolationException:" +

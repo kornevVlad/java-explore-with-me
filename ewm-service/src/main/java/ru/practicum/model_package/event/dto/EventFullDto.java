@@ -3,6 +3,7 @@ package ru.practicum.model_package.event.dto;
 import lombok.Data;
 import ru.practicum.model_package.categories.categoryDto.CategoryDto;
 import ru.practicum.model_package.event.model.Location;
+import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.user.userDto.UserShortDto;
 
 @Data
@@ -40,7 +41,7 @@ public class EventFullDto {
     //default: true
 
 
-    private String  state; //Список состояний жизненного цикла события
+    private StatusEvent state; //Список состояний жизненного цикла события
     //example: PUBLISHED
     //Enum:[ PENDING, PUBLISHED, CANCELED ]
 

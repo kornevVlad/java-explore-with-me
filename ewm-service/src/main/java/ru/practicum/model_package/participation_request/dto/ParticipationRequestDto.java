@@ -1,6 +1,7 @@
 package ru.practicum.model_package.participation_request.dto;
 
 import lombok.Data;
+import ru.practicum.model_package.participation_request.status_request.StatusRequest;
 
 @Data
 public class ParticipationRequestDto {
@@ -13,6 +14,6 @@ public class ParticipationRequestDto {
 
     private Long requester; //Идентификатор пользователя, отправившего заявку
 
-    private String status; //Статус заявки
+    private StatusRequest status; //Статус заявки
     //example: PENDING
 }

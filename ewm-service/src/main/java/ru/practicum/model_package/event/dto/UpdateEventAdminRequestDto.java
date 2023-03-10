@@ -2,6 +2,7 @@ package ru.practicum.model_package.event.dto;
 
 import lombok.Data;
 import ru.practicum.model_package.event.model.Location;
+import ru.practicum.model_package.event.status_event.AdminStatusEvent;
 
 import javax.validation.constraints.Size;
 
@@ -31,7 +32,7 @@ public class UpdateEventAdminRequestDto {
         //example: false
 
 
-    private String stateAction; //Новое состояние события
+    private AdminStatusEvent stateAction; //Новое состояние события
     //Enum:
     //[ PUBLISH_EVENT - ПУБЛИКУЕМОЕ СОБЫТИЕ, REJECT_EVENT - ОТКЛОНИТЬ СОБЫТИЕ ]
 
