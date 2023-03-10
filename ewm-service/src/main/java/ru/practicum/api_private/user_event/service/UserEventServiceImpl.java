@@ -128,9 +128,7 @@ public class UserEventServiceImpl implements UserEventService {
         validUser(userId);
         //Проверка подходящих статусов
         //Обновлять события только в статусе PENDING, CANCELED
-        if (event.getState().equals(StatusEvent.PENDING) | event.getState().equals(StatusEvent.CANCELED) ) {
-
-
+        if (event.getState().equals(StatusEvent.PENDING) | event.getState().equals(StatusEvent.CANCELED)) {
             if (updateEventUserRequestDto.getAnnotation() != null) {
                 event.setAnnotation(updateEventUserRequestDto.getAnnotation());
             }
