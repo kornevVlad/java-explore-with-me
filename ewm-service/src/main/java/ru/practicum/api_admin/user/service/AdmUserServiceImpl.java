@@ -55,14 +55,16 @@ public class AdmUserServiceImpl implements AdmUserService {
     public List<UserDto> getUsersByIds(List<Long> ids, Integer from, Integer size) {
         List<UserDto> usersDto = new ArrayList<>();
         Pageable pageable = PageRequest.of(from, size);
-        if (ids == null) {
+        if (ids != null) {
+            List<User> users = userRepository.findByIdIsIn(ids, pageable);
+            for (User user : users) {
+                usersDto.add(userMapper.toUserDto(user));
+            }
+            log.info("Получен список пользователей users = {}", usersDto);
+        } else {
             throw new BadRequestException("Failed to convert value of type java.lang.String" +
                     " to required type int; nested exception is java.lang.NumberFormatException:" +
                     " For input string: ad");
-        }
-        List<User> users = userRepository.findByIdIsIn(ids, pageable);
-        for (User user : users) {
-            usersDto.add(userMapper.toUserDto(user));
         }
         log.info("Получен список пользователей users = {}", usersDto);
         return usersDto;
