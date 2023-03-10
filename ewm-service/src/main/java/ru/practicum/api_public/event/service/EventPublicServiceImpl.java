@@ -12,6 +12,7 @@ import ru.practicum.model_package.event.mapper.EventMapper;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.event.model.QEvent;
 import ru.practicum.model_package.event.repository.EventRepository;
+import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.participation_request.repository.RequestRepository;
 
 import java.time.LocalDateTime;
@@ -41,7 +42,7 @@ public class EventPublicServiceImpl implements EventPublicService {
     @Override
     public EventFullDto getEventByEventId(Long eventId) {
         Event event = validEvent(eventId);
-        if (!event.getState().equals("PUBLISHED")) { //ВНЕСТИ ПРАВКИ ПО СТАТУСАМ !!!!!!!!!!!!
+        if (!event.getState().equals(StatusEvent.PUBLISHED)) { //ВНЕСТИ ПРАВКИ ПО СТАТУСАМ !!!!!!!!!!!!
             return null;
         }
         Long confirmed = requestRepository.countConfirmedByEventId(event.getId());
@@ -62,11 +63,10 @@ public class EventPublicServiceImpl implements EventPublicService {
         Pageable pageable = PageRequest.of(from, size);
         LocalDateTime start;
         LocalDateTime end;
-        final String PUBLISHED = "PUBLISHED";
-        List<Event> events = new ArrayList<>();
+        List<Event> events;
         List<EventShortDto> eventShortDtos = new ArrayList<>();
         QEvent qEvent = QEvent.event;
-        BooleanExpression booleanExpression = qEvent.state.eq(PUBLISHED);
+        BooleanExpression booleanExpression = qEvent.state.eq(String.valueOf(StatusEvent.PUBLISHED));
         if (text != null) {
             booleanExpression = booleanExpression.and(qEvent.annotation.containsIgnoreCase(text)
                             .or(qEvent.description.containsIgnoreCase(text)));
@@ -108,11 +108,6 @@ public class EventPublicServiceImpl implements EventPublicService {
             throw new NotFoundException("NOT FOUND EVENT_ID " + eventId);
         }
         return event.get();
-    }
-
-    private String generateDataTimeToString(LocalDateTime localDateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return localDateTime.format(formatter);
     }
 
     private LocalDateTime generateDataTimeToLocalDataTime(String dataTime) {
