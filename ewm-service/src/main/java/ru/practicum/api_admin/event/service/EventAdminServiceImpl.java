@@ -2,10 +2,10 @@ package ru.practicum.api_admin.event.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.stereotype.Service;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
@@ -15,7 +15,7 @@ import ru.practicum.model_package.event.dto.EventFullDto;
 import ru.practicum.model_package.event.dto.UpdateEventAdminRequestDto;
 import ru.practicum.model_package.event.mapper.EventMapper;
 import ru.practicum.model_package.event.model.Event;
-import ru.practicum.model_package.event.model.Location;
+
 import ru.practicum.model_package.event.model.QEvent;
 import ru.practicum.model_package.event.repository.EventRepository;
 import ru.practicum.model_package.participation_request.repository.RequestRepository;
@@ -98,7 +98,7 @@ public class EventAdminServiceImpl implements EventAdminService {
                     throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
                 }
             }
-            if (event.getState().equals(generateState(updateEventAdminRequestDto.getStateAction()))){
+            if (event.getState().equals(generateState(updateEventAdminRequestDto.getStateAction()))) {
                 throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
             }
             String state = generateState(updateEventAdminRequestDto.getStateAction());

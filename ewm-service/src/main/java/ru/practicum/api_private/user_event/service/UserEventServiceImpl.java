@@ -121,7 +121,7 @@ public class UserEventServiceImpl implements UserEventService {
             throw new BadRequestException("Failed to convert value of type java.lang.String to required type long;" +
                     " nested exception is java.lang.NumberFormatException: For input string: ad");
         }
-        log.info("Получен  Event = {}", event );
+        log.info("Получен  Event = {}", event);
         Long confirmed = requestRepository.countConfirmedByEventId(event.getId());
         return eventMapper.toEventFullDto(event, confirmed);
     }

@@ -52,7 +52,7 @@ public class AdmUserServiceImpl implements AdmUserService {
     }
 
     @Override
-    public List<UserDto> getUsersByIds(List<Long>ids, Integer from, Integer size) {
+    public List<UserDto> getUsersByIds(List<Long> ids, Integer from, Integer size) {
         List<UserDto> usersDto = new ArrayList<>();
         Pageable pageable = PageRequest.of(from, size);
         if (ids == null | ids.isEmpty() | ids.size() == 0) {
@@ -71,7 +71,7 @@ public class AdmUserServiceImpl implements AdmUserService {
     private void validUser(Long userId) {
         if (!userRepository.existsById(userId)) {
             log.info("Пользователь не найден с id={}", userId);
-            throw new NotFoundException("User with id="+ userId + " was not found");
+            throw new NotFoundException("User with id=" + userId + " was not found");
         }
     }
 }

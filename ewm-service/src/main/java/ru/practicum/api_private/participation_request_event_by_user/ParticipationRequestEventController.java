@@ -1,6 +1,5 @@
 package ru.practicum.api_private.participation_request_event_by_user;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

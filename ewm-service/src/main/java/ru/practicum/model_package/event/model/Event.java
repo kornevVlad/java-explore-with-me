@@ -3,7 +3,7 @@ package ru.practicum.model_package.event.model;
 import lombok.*;
 import ru.practicum.model_package.categories.model.Category;
 import ru.practicum.model_package.user.model.User;
-import ru.practicum.model_package.user.userDto.UserShortDto;
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -75,7 +75,7 @@ public class AdmCategoryServiceImpl implements AdmCategoryService {
         Optional<Category> category = repository.findById(id);
         if (category.isEmpty()) {
             log.error("Категория не найдена id={}", id);
-            throw new NotFoundException("Category with id="+ id +" was not found");
+            throw new NotFoundException("Category with id=" + id + " was not found");
         }
         return category.get();
     }

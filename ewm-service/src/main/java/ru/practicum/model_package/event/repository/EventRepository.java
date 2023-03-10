@@ -9,7 +9,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import ru.practicum.model_package.event.model.Event;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository

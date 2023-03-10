@@ -19,5 +19,5 @@ public interface AdmUserService {
     /**
      * Получение списка пользователей по id пользователя
      */
-    List<UserDto> getUsersByIds(List<Long>ids, Integer from, Integer size);
+    List<UserDto> getUsersByIds(List<Long> ids, Integer from, Integer size);
 }

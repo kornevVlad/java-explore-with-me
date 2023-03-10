@@ -35,7 +35,7 @@ public class UserEventController {
     @PostMapping("/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto createEvent(@PathVariable Long userId,
-                                   @Valid @RequestBody NewEventDto newEventDto ) {
+                                   @Valid @RequestBody NewEventDto newEventDto) {
         log.info("POST privateUserEvent добавление события userId={}, event={}", userId, newEventDto);
         return userEventService.createEvent(userId, newEventDto);
     }

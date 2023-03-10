@@ -3,13 +3,12 @@ package ru.practicum.model_package.participation_request.mapper;
 import org.springframework.stereotype.Component;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.participation_request.dto.ParticipationRequestDto;
-import ru.practicum.model_package.participation_request.model.EventRequestStatusUpdateResult;
 import ru.practicum.model_package.participation_request.model.ParticipationRequest;
 import ru.practicum.model_package.user.model.User;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+
 
 @Component
 public class RequestMapper {

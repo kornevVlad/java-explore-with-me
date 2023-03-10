@@ -72,7 +72,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     @Override
     public List<ParticipationRequestDto> getRequestByUserId(Long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("User with id=" + userId +" was not found");
+            throw new NotFoundException("User with id=" + userId + " was not found");
         }
         List<ParticipationRequest> requests = requestRepository.findParticipationRequestByRequesterId(userId);
         List<ParticipationRequestDto> requestDto = new ArrayList<>();
@@ -119,7 +119,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     /**
      * Валидация запроса
      */
-    private ParticipationRequest validRequestByUserId(Long userId ,Long requestId) {
+    private ParticipationRequest validRequestByUserId(Long userId, Long requestId) {
         Optional<ParticipationRequest> participationRequest = requestRepository.findById(requestId);
         if (participationRequest.isEmpty()) {
             throw new NotFoundException("Request with id=" + requestId + " was not found");
@@ -127,7 +127,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
         //Проверка пользователя и его запроса
         ParticipationRequest p = participationRequest.get();
         User user = p.getRequester();
-        if (!user.getId().equals(userId)){
+        if (!user.getId().equals(userId)) {
             throw new BadRequestException("Bad request");
         }
         return participationRequest.get();

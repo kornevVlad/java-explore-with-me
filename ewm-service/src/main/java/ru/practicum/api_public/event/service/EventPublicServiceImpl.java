@@ -68,8 +68,8 @@ public class EventPublicServiceImpl implements EventPublicService {
         QEvent qEvent = QEvent.event;
         BooleanExpression booleanExpression = qEvent.state.eq(PUBLISHED);
         if (text != null) {
-            booleanExpression = booleanExpression.and(qEvent.annotation.containsIgnoreCase(text).
-                    or(qEvent.description.containsIgnoreCase(text)));
+            booleanExpression = booleanExpression.and(qEvent.annotation.containsIgnoreCase(text)
+                            .or(qEvent.description.containsIgnoreCase(text)));
         }
         if (categories != null) {
             booleanExpression = booleanExpression.and(qEvent.category.id.in(categories));
