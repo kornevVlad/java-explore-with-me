@@ -55,7 +55,7 @@ public class AdmUserServiceImpl implements AdmUserService {
     public List<UserDto> getUsersByIds(List<Long> ids, Integer from, Integer size) {
         List<UserDto> usersDto = new ArrayList<>();
         Pageable pageable = PageRequest.of(from, size);
-        if (ids == null | ids.isEmpty() | ids.size() == 0) {
+        if (ids == null) {
             throw new BadRequestException("Failed to convert value of type java.lang.String" +
                     " to required type int; nested exception is java.lang.NumberFormatException:" +
                     " For input string: ad");
