@@ -185,9 +185,9 @@ public class EventAdminServiceImpl implements EventAdminService {
         if (state.equals(AdminStatusEvent.REJECT_EVENT)) {
             st = StatusEvent.PENDING;
         }
-        if (state.equals("CANCEL_EVENT")) {
+        /*if (state.equals("CANCEL_EVENT")) {
             st = StatusEvent.CANCELED;
-        }
+        }*/
         return st;
     }
 }

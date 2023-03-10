@@ -128,7 +128,7 @@ public class UserEventServiceImpl implements UserEventService {
         Event event = validEvent(eventId);
         validUser(userId);
         //Проверка подходящих статусов
-        if ((!event.getState().equals(StatusEvent.PENDING)) && (!event.getState().equals(AdminStatusEvent.REJECT_EVENT))) {
+        if ((!event.getState().equals(StatusEvent.PENDING))/* & (!event.getState().equals(AdminStatusEvent.REJECT_EVENT))*/) {
             throw new ConflictException("Only pending or canceled events can be changed");
         }
         if (updateEventUserRequestDto.getAnnotation() != null) {
