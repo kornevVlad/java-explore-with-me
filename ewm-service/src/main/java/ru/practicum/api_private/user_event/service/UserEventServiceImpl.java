@@ -127,48 +127,50 @@ public class UserEventServiceImpl implements UserEventService {
         Event event = validEvent(eventId);
         validUser(userId);
         //Проверка подходящих статусов
+        if (updateEventUserRequestDto.getAnnotation() != null) {
+            event.setAnnotation(updateEventUserRequestDto.getAnnotation());
+        }
+        if (updateEventUserRequestDto.getCategory() != null) {
+            //добавить валидацию
+            Category category = validCategory(updateEventUserRequestDto.getCategory());
+            event.setCategory(category);
+        }
+        if (updateEventUserRequestDto.getDescription() != null) {
+            event.setDescription(updateEventUserRequestDto.getDescription());
+        }
+        if (updateEventUserRequestDto.getEventDate() != null) {
+            LocalDateTime dateTime = generateDataTimeToLocalDataTime(updateEventUserRequestDto.getEventDate());
+            if (dateTime.isBefore(LocalDateTime.now().plusHours(2))) {
+                throw new ConflictException("Field: eventDate. Error: должно содержать дату," +
+                        " которая еще не наступила. Value:" + dateTime);
+            }
+            event.setEventDate(dateTime);
+        }
+        if (updateEventUserRequestDto.getLocation() != null) {
+            event.setLon(updateEventUserRequestDto.getLocation().getLon());
+            event.setLat(updateEventUserRequestDto.getLocation().getLat());
+        }
+        if (updateEventUserRequestDto.getPaid() != null) {
+            event.setPaid(updateEventUserRequestDto.getPaid());
+        }
+        if (updateEventUserRequestDto.getParticipantLimit() != null) {
+            event.setParticipantLimit(updateEventUserRequestDto.getParticipantLimit());
+        }
+        if (updateEventUserRequestDto.getRequestModeration() != null) {
+            event.setRequestModeration(updateEventUserRequestDto.getRequestModeration());
+        }
         //Обновлять события только в статусе PENDING, CANCELED
-        if (event.getState().equals(StatusEvent.PENDING) | event.getState().equals(StatusEvent.CANCELED)) {
-            if (updateEventUserRequestDto.getAnnotation() != null) {
-                event.setAnnotation(updateEventUserRequestDto.getAnnotation());
-            }
-            if (updateEventUserRequestDto.getCategory() != null) {
-                //добавить валидацию
-                Category category = validCategory(updateEventUserRequestDto.getCategory());
-                event.setCategory(category);
-            }
-            if (updateEventUserRequestDto.getDescription() != null) {
-                event.setDescription(updateEventUserRequestDto.getDescription());
-            }
-            if (updateEventUserRequestDto.getEventDate() != null) {
-                LocalDateTime dateTime = generateDataTimeToLocalDataTime(updateEventUserRequestDto.getEventDate());
-                if (dateTime.isBefore(LocalDateTime.now().plusHours(2))) {
-                    throw new ConflictException("Field: eventDate. Error: должно содержать дату," +
-                            " которая еще не наступила. Value:" + dateTime);
-                }
-                event.setEventDate(dateTime);
-            }
-            if (updateEventUserRequestDto.getLocation() != null) {
-                event.setLon(updateEventUserRequestDto.getLocation().getLon());
-                event.setLat(updateEventUserRequestDto.getLocation().getLat());
-            }
-            if (updateEventUserRequestDto.getPaid() != null) {
-                event.setPaid(updateEventUserRequestDto.getPaid());
-            }
-            if (updateEventUserRequestDto.getParticipantLimit() != null) {
-                event.setParticipantLimit(updateEventUserRequestDto.getParticipantLimit());
-            }
-            if (updateEventUserRequestDto.getRequestModeration() != null) {
-                event.setRequestModeration(updateEventUserRequestDto.getRequestModeration());
-            }
-            if (updateEventUserRequestDto.getStateAction() != null) {
+        if (updateEventUserRequestDto.getStateAction() != null) {
+            if (event.getState().equals(StatusEvent.PENDING)) {
                 event.setState(generateStatus(updateEventUserRequestDto.getStateAction()));
+            } else if (event.getState().equals(StatusEvent.CANCELED)) {
+                event.setState(generateStatus(updateEventUserRequestDto.getStateAction()));
+            } else {
+                throw new ConflictException("Only pending or canceled events can be changed");
             }
-            if (updateEventUserRequestDto.getTitle() != null) {
-                event.setTitle(updateEventUserRequestDto.getTitle());
-            }
-        } else {
-            throw new ConflictException("Only pending or canceled events can be changed");
+        }
+        if (updateEventUserRequestDto.getTitle() != null) {
+            event.setTitle(updateEventUserRequestDto.getTitle());
         }
         log.info("Обновленный event = {}", event);
         Long confirmed = requestRepository.countConfirmedByEventId(event.getId());
