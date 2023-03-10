@@ -206,6 +206,9 @@ public class UserEventServiceImpl implements UserEventService {
         EventRequestStatusUpdateResult statusResult = new EventRequestStatusUpdateResult();
         for (Long id : ids.getRequestIds()) {
             ParticipationRequest request = validRequest(id);
+            if (requestRepository.countByEventAndStatus(event, StatusRequest.CONFIRMED) >= event.getParticipantLimit()) {
+                throw new ConflictException("LIMIT REQUEST");
+            }
             if (request.getStatus().equals(StatusRequest.PENDING)) {
                 request.setStatus(ids.getStatus());
                 if (request.getStatus().equals(StatusRequest.CONFIRMED)) {
@@ -220,33 +223,6 @@ public class UserEventServiceImpl implements UserEventService {
                     throw new ConflictException("CONFLICT STATUS REQUEST");
                 }
             }
-            //валидация заявки по event_id
-           /* if (event.getId().equals(request.getEvent().getId())) {
-                //Валидация user_id
-                if (user.getId().equals(event.getInitiator().getId())) {
-                    List<ParticipationRequest> events = requestRepository.findAllByEventId(eventId);
-                    //валидация по количеству свободных мест
-                    if (event.getParticipantLimit() > events.size()) {
-                        //валидация по статусу
-                        if (!request.getStatus().equals(StatusRequest.CONFIRMED)) {
-                            //подтверждать только в статусе PENDING
-                            if (request.getStatus().equals(StatusRequest.PENDING)) {
-                                request.setStatus(ids.getStatus());
-                                if (request.getStatus().equals(StatusRequest.CONFIRMED)) {
-                                    statusResult.getConfirmedRequests().add(requestMapper.toParticipationRequestDto(request));
-                                }
-                                if (request.getStatus().equals(StatusRequest.REJECTED)) {
-                                    request.setStatus(StatusRequest.REJECTED);
-                                    statusResult.getRejectedRequests().add(requestMapper.toParticipationRequestDto(request));
-                                }
-                            }
-                        }
-                    } else if (event.getParticipantLimit() < events.size()) {
-                        request.setStatus(StatusRequest.REJECTED);
-                        statusResult.getRejectedRequests().add(requestMapper.toParticipationRequestDto(request));
-                    }
-                }
-            }*/
             requestRepository.save(request);
         }
         return statusResult;

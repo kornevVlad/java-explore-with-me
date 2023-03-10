@@ -144,7 +144,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
             throw new ConflictException("REQUEST NOT PUBLIC EVENTS");
         }
         //Лимит заявок не должен превышать лимит участников в событии
-        if (requestRepository.countLim(event.getId()).equals(event.getParticipantLimit())) {
+        if (requestRepository.countByEventAndStatus(event, StatusRequest.CONFIRMED).equals(event.getParticipantLimit())) {
             log.error("Лимит заявок не должен превышать лимит участников в событии");
             throw new ConflictException("LIMIT REQUEST IS OVER");
         }

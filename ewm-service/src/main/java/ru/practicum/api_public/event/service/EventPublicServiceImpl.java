@@ -110,6 +110,7 @@ public class EventPublicServiceImpl implements EventPublicService {
         return event.get();
     }
 
+
     private LocalDateTime generateDataTimeToLocalDataTime(String dataTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(dataTime, formatter);

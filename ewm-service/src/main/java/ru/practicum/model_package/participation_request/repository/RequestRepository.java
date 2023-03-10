@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.model_package.event.model.Event;
 import ru.practicum.model_package.participation_request.model.ParticipationRequest;
+import ru.practicum.model_package.participation_request.status_request.StatusRequest;
 
 import java.util.List;
 
@@ -20,10 +21,6 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
             " AND ev.event.id = :event_id ")
     Long countConfirmedByEventId(@Param("event_id")Long eventId);
 
-    /*@Query("SELECT count(ev) FROM ParticipationRequest ev WHERE ev.status LIKE 'PENDING'" +
-            " AND ev.event.id = :event_id ")*/
-    Long countByEventAndStatus(Event event, String status);
 
-    @Query("SELECT count(ev) FROM ParticipationRequest ev WHERE  ev.event.id = :event_id ")
-    Long countLim(@Param("event_id") Long eventId);
+    Long countByEventAndStatus(Event event, StatusRequest status);
 }
