@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.client.Client;
 import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
@@ -55,19 +56,23 @@ public class UserEventServiceImpl implements UserEventService {
 
     private final EventMapper eventMapper;
 
+    private final Client client;
+
 
     public UserEventServiceImpl(UserRepository userRepository,
                                 CategoryRepository categoryRepository,
                                 EventRepository eventRepository,
                                 RequestRepository requestRepository,
                                 RequestMapper requestMapper,
-                                EventMapper eventMapper) {
+                                EventMapper eventMapper,
+                                Client client) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
         this.eventRepository = eventRepository;
         this.requestRepository = requestRepository;
         this.requestMapper = requestMapper;
         this.eventMapper = eventMapper;
+        this.client = client;
     }
 
     @Override
@@ -105,7 +110,7 @@ public class UserEventServiceImpl implements UserEventService {
             eventsShortDto.add(eventMapper.toEventShortDto(event, confirmed));
         }
         log.info("Список событий пользователя с id={}, список ={}", userId, eventsShortDto);
-        return eventsShortDto;
+        return client.setViewsToEventsShortDto(eventsShortDto);
     }
 
     @Override
@@ -113,12 +118,11 @@ public class UserEventServiceImpl implements UserEventService {
         Event event = validEvent(eventId);
         User user = validUser(userId);
         if (!event.getInitiator().getId().equals(user.getId())) {
-            throw new BadRequestException("Failed to convert value of type java.lang.String to required type long;" +
-                    " nested exception is java.lang.NumberFormatException: For input string: ad");
+            throw new BadRequestException("USER DID NOT FIND THE EVENT");
         }
         log.info("Получен  Event = {}", event);
         Long confirmed = requestRepository.countConfirmedByEventId(event.getId());
-        return eventMapper.toEventFullDto(event, confirmed);
+        return client.setViewsToEventFullDto(eventMapper.toEventFullDto(event, confirmed));
     }
 
     @Override

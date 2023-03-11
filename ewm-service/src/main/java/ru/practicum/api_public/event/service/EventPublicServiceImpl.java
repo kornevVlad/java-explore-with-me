@@ -5,6 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.StatsClient;
+import ru.practicum.client.Client;
+import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.model_package.event.dto.EventFullDto;
 import ru.practicum.model_package.event.dto.EventShortDto;
@@ -15,6 +18,8 @@ import ru.practicum.model_package.event.repository.EventRepository;
 import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.participation_request.repository.RequestRepository;
 
+import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,23 +36,32 @@ public class EventPublicServiceImpl implements EventPublicService {
 
     private final RequestRepository requestRepository;
 
+    private final StatsClient statsClient;
+
+    private final Client client;
+
     public EventPublicServiceImpl(EventRepository eventRepository,
                                   EventMapper eventMapper,
-                                  RequestRepository requestRepository) {
+                                  RequestRepository requestRepository,
+                                  StatsClient statsClient,
+                                  Client client) {
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
         this.requestRepository = requestRepository;
+        this.statsClient = statsClient;
+        this.client = client;
     }
 
     @Override
-    public EventFullDto getEventByEventId(Long eventId) {
+    public EventFullDto getEventByEventId(Long eventId, HttpServletRequest httpServletRequest) {
         Event event = validEvent(eventId);
-        if (!event.getState().equals(StatusEvent.PUBLISHED)) { //ВНЕСТИ ПРАВКИ ПО СТАТУСАМ !!!!!!!!!!!!
-            return null;
+        if (!event.getState().equals(StatusEvent.PUBLISHED)) {
+            throw new ConflictException("STATUS BAD");
         }
         Long confirmed = requestRepository.countConfirmedByEventId(event.getId());
         log.info("Получено событие {}", event);
-        return eventMapper.toEventFullDto(event, confirmed);
+        statsClient.createHit(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
+        return client.setViewsToEventFullDto(eventMapper.toEventFullDto(event, confirmed));
     }
 
     @Override
@@ -94,11 +108,6 @@ public class EventPublicServiceImpl implements EventPublicService {
                 eventShortDtos.add(eventMapper.toEventShortDto(event, count));
             }
         }
-        // ДОБАВИТЬ СОРТИРОВКУ ПО ДЛЯ ВЫВОДА!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
-
-       // RestTemplate restTemplate = new RestTemplate();
-       // restTemplate.post
-
         return eventShortDtos;
     }
 

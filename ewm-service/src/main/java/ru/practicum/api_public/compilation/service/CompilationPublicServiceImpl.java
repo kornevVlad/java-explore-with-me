@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.client.Client;
 import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.model_package.compilation.dto.CompilationDto;
@@ -34,16 +35,20 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
 
     private final RequestRepository requestRepository;
 
+    private final Client client;
+
     public CompilationPublicServiceImpl(CompilationRepository compilationRepository,
                                         CompilationMapper compilationMapper,
                                         EventRepository eventRepository,
                                         EventMapper eventMapper,
-                                        RequestRepository requestRepository) {
+                                        RequestRepository requestRepository,
+                                        Client client) {
         this.compilationRepository = compilationRepository;
         this.compilationMapper = compilationMapper;
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
         this.requestRepository = requestRepository;
+        this.client = client;
     }
 
     @Override
@@ -57,7 +62,8 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
                 System.out.println(compilation);
                 if (!compilation.getEvents().isEmpty()) {
                     List<EventShortDto> eventShortDtos = getEvents(compilation.getEvents());
-                    compilationDtos.add(compilationMapper.toCompilationDto(compilation, eventShortDtos));
+                    compilationDtos.add(compilationMapper.toCompilationDto(compilation,
+                            client.setViewsToEventsShortDto(eventShortDtos)));
                 } else {
                     compilationDtos.add(compilationMapper.toCompilationDto(compilation, new ArrayList<>()));
                 }
@@ -69,13 +75,11 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
     @Override
     public CompilationDto getById(Long id) {
         if (id == null) {
-            throw new BadRequestException("Failed to convert value of type java.lang.String" +
-                    " to required type long; nested exception is java.lang.NumberFormatException:" +
-                    " For input string: ad");
+            throw new BadRequestException("BAD REQUEST COMPILATION ID");
         }
         Compilation compilation = validCompilation(id);
         List<EventShortDto> eventShortDtos = getEvents(compilation.getEvents());
-        return compilationMapper.toCompilationDto(compilation, eventShortDtos);
+        return compilationMapper.toCompilationDto(compilation, client.setViewsToEventsShortDto(eventShortDtos));
     }
 
     private Compilation validCompilation(Long id) {

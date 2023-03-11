@@ -23,5 +23,5 @@ public class EventShortDto {
 
     private String title; //Заголовок
 
-    private Integer views; //Количество просмотрев события
+    private Long views; //Количество просмотрев события
 }

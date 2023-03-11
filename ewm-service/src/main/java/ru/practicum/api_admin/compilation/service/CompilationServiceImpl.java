@@ -2,6 +2,7 @@ package ru.practicum.api_admin.compilation.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.client.Client;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.model_package.compilation.dto.CompilationDto;
@@ -34,16 +35,20 @@ public class CompilationServiceImpl implements CompilationService {
 
     private final RequestRepository requestRepository;
 
+    private final Client client;
+
     public CompilationServiceImpl(CompilationRepository compilationRepository,
                                   CompilationMapper compilationMapper,
                                   EventRepository eventRepository,
                                   EventMapper eventMapper,
-                                  RequestRepository requestRepository) {
+                                  RequestRepository requestRepository,
+                                  Client client) {
         this.compilationRepository = compilationRepository;
         this.compilationMapper = compilationMapper;
         this.eventRepository = eventRepository;
         this.eventMapper = eventMapper;
         this.requestRepository = requestRepository;
+        this.client = client;
     }
 
     @Override
@@ -53,7 +58,8 @@ public class CompilationServiceImpl implements CompilationService {
         List<EventShortDto> eventShortDtos = generateEventsShortDtoList(events);
         log.info("Сохраненная подборка событий {}", compilation);
         try {
-            return compilationMapper.toCompilationDto(compilationRepository.save(compilation), eventShortDtos);
+            return compilationMapper.toCompilationDto(compilationRepository.save(compilation),
+                    client.setViewsToEventsShortDto(eventShortDtos));
         } catch (RuntimeException e) {
             throw new ConflictException("could not execute statement; SQL [n/a];" +
                     " constraint [uq_compilation_name]; nested exception is " +
@@ -82,8 +88,10 @@ public class CompilationServiceImpl implements CompilationService {
             compilation.setTitle(updateCompilationRequestDto.getTitle());
         }
         List<EventShortDto> eventShortDtos = generateEventsShortDtoList(events);
+        client.setViewsToEventsShortDto(eventShortDtos);
         log.info("Сохраненная подборка событий {}", compilation);
-        return compilationMapper.toCompilationDto(compilationRepository.save(compilation), eventShortDtos);
+        return compilationMapper.toCompilationDto(compilationRepository.save(compilation),
+                client.setViewsToEventsShortDto(eventShortDtos));
     }
 
     private Compilation validCompilation(Long id) {

@@ -46,7 +46,7 @@ public class EventFullDto {
     //Enum:[ PENDING, PUBLISHED, CANCELED ]
 
 
-    private Integer views; //Количество просмотрев события
+    private Long views; //Количество просмотрев события
 
     private String title; //Заголовок события
 }

@@ -13,6 +13,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,12 +49,13 @@ public class StatsServiceImpl implements StatsService {
         log.info("Get параметры в сервисе start={}, end={}, unique={}",start,end,unique);
         LocalDateTime startDateTime = getTimeDecoder(start);
         LocalDateTime endDateTime = getTimeDecoder(end);
+        List<String> strUri = getConvertText(uris);
 
         List<Stats> statsList;
         if (unique) {
-            statsList = repository.getAllByUriAndUniqueIp(startDateTime, endDateTime, uris);
+            statsList = repository.getAllByUriAndUniqueIp(startDateTime, endDateTime, strUri);
         } else {
-            statsList = repository.getAllByUriNotUniqueIp(startDateTime, endDateTime, uris);
+            statsList = repository.getAllByUriNotUniqueIp(startDateTime, endDateTime, strUri);
         }
         log.info("Список stats {}", statsList);
         return statsList;
@@ -65,5 +67,13 @@ public class StatsServiceImpl implements StatsService {
     private LocalDateTime getTimeDecoder(String dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return LocalDateTime.parse(URLDecoder.decode(dateTime, StandardCharsets.UTF_8), formatter);
+    }
+
+    private List<String> getConvertText(List<String> uri) {
+        List<String> str = new ArrayList<>();
+        for (String text : uri) {
+          str.add(text.substring(1, text.length() -1));
+        }
+        return str;
     }
 }

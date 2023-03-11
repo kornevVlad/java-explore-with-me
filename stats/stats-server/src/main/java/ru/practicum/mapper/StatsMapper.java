@@ -30,12 +30,14 @@ public class StatsMapper {
     }
 
     public LocalDateTime generateDataTime(String dateTime) {
+        LocalDateTime dt = LocalDateTime.parse(dateTime);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.parse(dateTime, formatter);
+        String f = formatter.format(dt).replaceAll("\\.[^.]*", "");
+        return LocalDateTime.parse(f, formatter);
     }
 
     public String generateDataTimeToString(LocalDateTime localDateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return localDateTime.format(formatter);
     }
 }
