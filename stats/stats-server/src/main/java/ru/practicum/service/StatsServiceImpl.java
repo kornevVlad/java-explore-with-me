@@ -34,11 +34,11 @@ public class StatsServiceImpl implements StatsService {
      *Сохраненеие статистики по model Hit
      */
     @Override
-    public HitDto createHit(HitDto hitDto) {
+    public void createHit(HitDto hitDto) {
         Hit hit = statsMapper.toHit(hitDto);
         log.info("Экземпляр Hit в сервисе сохранения {}", hit);
         repository.save(hit);
-        return statsMapper.toHitDto(hit);
+        statsMapper.toHitDto(hit);
     }
 
     /**
