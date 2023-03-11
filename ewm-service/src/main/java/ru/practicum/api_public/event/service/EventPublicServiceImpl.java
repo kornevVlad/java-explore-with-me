@@ -18,7 +18,7 @@ import ru.practicum.model_package.event.repository.EventRepository;
 import ru.practicum.model_package.event.status_event.StatusEvent;
 import ru.practicum.model_package.participation_request.repository.RequestRepository;
 
-import javax.persistence.EntityManager;
+
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
