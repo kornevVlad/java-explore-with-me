@@ -16,6 +16,19 @@ public class Client {
     private final StatsClient statsClient;
 
 
+    public List<EventFullDto> setViewsToEventsFullDto(List<EventFullDto> eventsFullDto) {
+        Set<String> uris = new HashSet<>();
+        for (EventFullDto eventFullDto : eventsFullDto) {
+            uris.add("/events/" + eventFullDto.getId());
+        }
+
+        Map<Long, Long> views = getViewsForEvents(uris);
+
+        eventsFullDto.forEach(e -> e.setViews(views.get(e.getId())));
+
+        return eventsFullDto;
+    }
+
     public List<EventShortDto> setViewsToEventsShortDto(List<EventShortDto> eventsShortDto) {
         Set<String> uris = new HashSet<>();
         for (EventShortDto eventShortDto : eventsShortDto) {
@@ -37,6 +50,16 @@ public class Client {
         }
 
         return eventFullDto;
+    }
+
+    public EventShortDto setViewsToEventShortDto(EventShortDto eventShortDto) {
+        List<StatsDto> stats = getViewsForEvent(eventShortDto.getId());
+
+        if (!stats.isEmpty()) {
+            eventShortDto.setViews(stats.get(0).getHits());
+        }
+
+        return eventShortDto;
     }
 
     private Map<Long, Long> getViewsForEvents(Set<String> uris) {
