@@ -72,7 +72,7 @@ public class StatsServiceImpl implements StatsService {
     private List<String> getConvertText(List<String> uri) {
         List<String> str = new ArrayList<>();
         for (String text : uri) {
-          str.add(text.substring(1, text.length() -1));
+          str.add(text.substring(1, text.length() - 1));
         }
         return str;
     }
