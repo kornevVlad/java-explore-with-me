@@ -1,6 +1,7 @@
 package ru.practicum;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -15,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class StatsClient {
 
     private final RestTemplate restTemplate;
@@ -43,7 +45,7 @@ public class StatsClient {
         hitDto.setApp(appName);
         hitDto.setUri(uri);
         hitDto.setIp(ip);
-        hitDto.setTimestamp(LocalDateTime.now().toString());
+        hitDto.setTimestamp(LocalDateTime.now());
         HttpEntity<Object> requestEntity = new HttpEntity<>(hitDto, defaultHeaders());
         restTemplate.exchange(path, HttpMethod.POST, requestEntity, Object.class);
     }

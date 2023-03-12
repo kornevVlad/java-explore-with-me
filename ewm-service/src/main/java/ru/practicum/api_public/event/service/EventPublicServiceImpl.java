@@ -61,7 +61,8 @@ public class EventPublicServiceImpl implements EventPublicService {
         Long confirmed = requestRepository.countConfirmedByEventId(event.getId());
         log.info("Получено событие {}", event);
         statsClient.createHit(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
-        return client.setViewsToEventFullDto(eventMapper.toEventFullDto(event, confirmed));
+        EventFullDto eventFullDto = eventMapper.toEventFullDto(event, confirmed);
+        return client.setViewsToEventFullDto(eventFullDto);
     }
 
     @Override
@@ -73,7 +74,9 @@ public class EventPublicServiceImpl implements EventPublicService {
                                                           Boolean onlyAvailable,
                                                           String sort,
                                                           Integer from,
-                                                          Integer size) {
+                                                          Integer size,
+                                                          HttpServletRequest httpServletRequest) {
+        statsClient.createHit(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
         Pageable pageable = PageRequest.of(from, size);
         LocalDateTime start;
         LocalDateTime end;

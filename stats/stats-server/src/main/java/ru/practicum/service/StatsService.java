@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface StatsService {
 
-    void createHit(HitDto hitDto);
+    HitDto createHit(HitDto hitDto);
 
     List<Stats> getStats(String start, String end, List<String> uris, Boolean unique);
 }

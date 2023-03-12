@@ -9,11 +9,9 @@ import ru.practicum.model.Hit;
 import ru.practicum.model.Stats;
 import ru.practicum.repository.StatisticRepository;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,11 +32,11 @@ public class StatsServiceImpl implements StatsService {
      *Сохраненеие статистики по model Hit
      */
     @Override
-    public void createHit(HitDto hitDto) {
+    public HitDto createHit(HitDto hitDto) {
         Hit hit = statsMapper.toHit(hitDto);
         log.info("Экземпляр Hit в сервисе сохранения {}", hit);
         repository.save(hit);
-        statsMapper.toHitDto(hit);
+        return statsMapper.toHitDto(hit);
     }
 
     /**
@@ -49,13 +47,12 @@ public class StatsServiceImpl implements StatsService {
         log.info("Get параметры в сервисе start={}, end={}, unique={}",start,end,unique);
         LocalDateTime startDateTime = getTimeDecoder(start);
         LocalDateTime endDateTime = getTimeDecoder(end);
-        List<String> strUri = getConvertText(uris);
 
         List<Stats> statsList;
         if (unique) {
-            statsList = repository.getAllByUriAndUniqueIp(startDateTime, endDateTime, strUri);
+            statsList = repository.getAllByUriAndUniqueIp(startDateTime, endDateTime, uris);
         } else {
-            statsList = repository.getAllByUriNotUniqueIp(startDateTime, endDateTime, strUri);
+            statsList = repository.getAllByUriNotUniqueIp(startDateTime, endDateTime, uris);
         }
         log.info("Список stats {}", statsList);
         return statsList;
@@ -66,14 +63,6 @@ public class StatsServiceImpl implements StatsService {
      */
     private LocalDateTime getTimeDecoder(String dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return LocalDateTime.parse(URLDecoder.decode(dateTime, StandardCharsets.UTF_8), formatter);
-    }
-
-    private List<String> getConvertText(List<String> uri) {
-        List<String> str = new ArrayList<>();
-        for (String text : uri) {
-          str.add(text.substring(1, text.length() - 1));
-        }
-        return str;
+        return LocalDateTime.parse(dateTime, formatter);
     }
 }

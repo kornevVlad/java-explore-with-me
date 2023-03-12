@@ -53,11 +53,6 @@ public class EventAdminServiceImpl implements EventAdminService {
     @Override
     public EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequestDto updateEventAdminRequestDto) {
         Event event = validEvent(eventId);
-        if (event.getState().equals(StatusEvent.PUBLISHED)) {
-            if (updateEventAdminRequestDto.getStateAction().equals(AdminStatusEvent.REJECT_EVENT)) {
-                throw new ConflictException("Cannot publish the event because it's not in the right state: PUBLISHED");
-            }
-        }
         if (updateEventAdminRequestDto.getAnnotation() != null) {
             event.setAnnotation(updateEventAdminRequestDto.getAnnotation());
         }
@@ -101,6 +96,9 @@ public class EventAdminServiceImpl implements EventAdminService {
             //изменить статус можно только у события в статусе ожидания
             if (event.getState().equals(StatusEvent.PENDING)) {
                 event.setState(generateState(updateEventAdminRequestDto.getStateAction()));
+                if (event.getState().equals(StatusEvent.PUBLISHED)) {
+                    event.setPublishedOn(LocalDateTime.now());
+                }
             }
         }
         if (updateEventAdminRequestDto.getTitle() != null) {
@@ -124,7 +122,6 @@ public class EventAdminServiceImpl implements EventAdminService {
         Pageable pageable = PageRequest.of(from, size);
         List<Event> events = new ArrayList<>();
         List<EventFullDto> eventFullDtos = new ArrayList<>();
-        //РЕАЛИЗОВАТЬ ФИЛЬТР!!!!!!!!!!!!!!!!!!!!!!!!!
         QEvent qEvent = QEvent.event;
         BooleanExpression booleanExpression = qEvent.id.isNotNull();
         if (users != null) {

@@ -19,5 +19,6 @@ public interface EventPublicService {
                                                    Boolean onlyAvailable,
                                                    String sort,
                                                    Integer from,
-                                                   Integer size);
+                                                   Integer size,
+                                                   HttpServletRequest httpServletRequest);
 }

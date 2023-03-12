@@ -43,9 +43,10 @@ public class EventPublicController {
                                             @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                             @RequestParam(required = false) String sort,
                                             @RequestParam(defaultValue = "0") Integer from,
-                                            @RequestParam(defaultValue = "10") Integer size) {
+                                            @RequestParam(defaultValue = "10") Integer size,
+                                            HttpServletRequest httpServletRequest) {
         log.info("GET EventPublicController получение событий с фильтрацией");
         return eventPublicService.getAllEventsByStatusPublic(text, categories, paid, rangeStart,
-                rangeEnd, onlyAvailable, sort, from, size);
+                rangeEnd, onlyAvailable, sort, from, size, httpServletRequest);
     }
 }

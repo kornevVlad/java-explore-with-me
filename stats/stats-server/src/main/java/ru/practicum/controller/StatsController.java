@@ -22,9 +22,9 @@ public class StatsController {
 
     @PostMapping(value = "/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createHit(@RequestBody HitDto hitDto) {
+    public HitDto createHit(@RequestBody HitDto hitDto) {
         log.info("POST статистики, body = {}", hitDto);
-        statsService.createHit(hitDto);
+        return statsService.createHit(hitDto);
     }
 
     @GetMapping(value = "/stats")

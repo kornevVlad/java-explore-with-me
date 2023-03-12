@@ -65,7 +65,6 @@ public class EventMapper {
         }
         eventFullDto.setRequestModeration(event.getRequestModeration());
         eventFullDto.setState(event.getState());
-        eventFullDto.setViews(null); //ДОСТАТЬ ИЗ СТАТИСТИКИ!!!!!!!!!
         eventFullDto.setTitle(event.getTitle());
         return eventFullDto;
     }
@@ -80,7 +79,6 @@ public class EventMapper {
         eventShortDto.setInitiator(userMapper.toUserShortDto(event.getInitiator()));
         eventShortDto.setPaid(event.getPaid());
         eventShortDto.setTitle(event.getTitle());
-        eventShortDto.setViews(null); //Количество просмотрев события
         return eventShortDto;
     }
 
