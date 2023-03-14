@@ -1,8 +1,15 @@
 package ru.practicum;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.*;
 
-@Data
+import java.time.LocalDateTime;
+
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class HitDto {
 
     private Long id; //Идентификатор записи
@@ -13,6 +20,7 @@ public class HitDto {
 
     private String ip; //IP-адрес пользователя, осуществившего запрос
 
-    private String timestamp; //Дата и время, когда был совершен запрос к
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime timestamp; //Дата и время, когда был совершен запрос к
                                 // эндпоинту (в формате "yyyy-MM-dd HH:mm:ss")
 }
