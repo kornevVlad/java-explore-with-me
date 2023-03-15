@@ -21,7 +21,7 @@ import ru.practicum.model.participation.status_request.StatusRequest;
 import ru.practicum.model.user.model.User;
 import ru.practicum.model.user.repository.UserRepository;
 
-import javax.persistence.NoResultException;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

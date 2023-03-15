@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.practicum.model.comment.dto.RequestCommentDto;
 import ru.practicum.model.comment.dto.ResponseCommentDto;
 import ru.practicum.model.comment.model.Comment;
-import ru.practicum.model.comment.status.StatusComment;
 import ru.practicum.model.event.model.Event;
 import ru.practicum.model.user.model.User;
 
