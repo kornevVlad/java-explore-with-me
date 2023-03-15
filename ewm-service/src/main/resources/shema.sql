@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS comments
     event_id     BIGINT     NOT NULL,
     user_id      BIGINT     NOT NULL,
     publish      TIMESTAMP WITHOUT TIME ZONE,
-    state              VARCHAR(120),
+    status              VARCHAR(120),
     CONSTRAINT pk_comments PRIMARY KEY (id),
     CONSTRAINT fk_comments_on_events FOREIGN KEY (event_id) REFERENCES events (id),
     CONSTRAINT fk_comments_on_users FOREIGN KEY (user_id) REFERENCES users (id)

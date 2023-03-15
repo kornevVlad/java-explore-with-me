@@ -54,7 +54,7 @@ public class EventPublicServiceImpl implements EventPublicService {
 
     @Override
     public EventFullDto getEventByEventId(Long eventId, HttpServletRequest httpServletRequest) {
-        Event event = getValidEvent(eventId);
+        Event event = getEvent(eventId);
         if (!event.getState().equals(StatusEvent.PUBLISHED)) {
             throw new ConflictException("STATUS BAD");
         }
@@ -114,7 +114,7 @@ public class EventPublicServiceImpl implements EventPublicService {
         return eventShortDtos;
     }
 
-    private Event getValidEvent(Long eventId) {
+    private Event getEvent(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new NotFoundException("NOT FOUND EVENT_ID " + eventId);

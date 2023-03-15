@@ -45,8 +45,8 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
     @Override
     public ParticipationRequestDto addRequestByUser(Long userId, Long eventId) {
-        Event event = getValidEvent(eventId);
-        User user = getValidUser(userId);
+        Event event = getEvent(eventId);
+        User user = getUser(userId);
         StatusEvent status = StatusEvent.PUBLISHED;
         validUserAndEvent(user, event, status);
         ParticipationRequest participationRequest;
@@ -81,8 +81,8 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
     @Override
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
-        getValidUser(userId);
-        ParticipationRequest participationRequest = getValidRequestByUserId(userId, requestId);
+        getUser(userId);
+        ParticipationRequest participationRequest = getRequestByUserId(userId, requestId);
         participationRequest.setStatus(StatusRequest.CANCELED);
         log.info("Статус запроса изменен ={}", participationRequest);
         return requestMapper.toParticipationRequestDto(requestRepository.save(participationRequest));
@@ -91,7 +91,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     /**
      *Валидация пользователя
      */
-    private User getValidUser(Long userId) {
+    private User getUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new BadRequestException("Failed to convert value of type java.lang.String" +
@@ -104,7 +104,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     /**
      *Валидация события
      */
-    private Event getValidEvent(Long eventId) {
+    private Event getEvent(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new NotFoundException("Event with id=" + eventId + " was not found");
@@ -115,7 +115,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     /**
      * Валидация запроса
      */
-    private ParticipationRequest getValidRequestByUserId(Long userId, Long requestId) {
+    private ParticipationRequest getRequestByUserId(Long userId, Long requestId) {
         Optional<ParticipationRequest> participationRequest = requestRepository.findById(requestId);
         if (participationRequest.isEmpty()) {
             throw new NotFoundException("Request with id=" + requestId + " was not found");

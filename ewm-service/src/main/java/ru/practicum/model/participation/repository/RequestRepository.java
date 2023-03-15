@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.practicum.model.event.model.Event;
 import ru.practicum.model.participation.model.ParticipationRequest;
 import ru.practicum.model.participation.status_request.StatusRequest;
+import ru.practicum.model.user.model.User;
 
 import java.util.List;
 
@@ -21,8 +22,7 @@ public interface RequestRepository extends JpaRepository<ParticipationRequest, L
             "ev.status = 'CONFIRMED'")
     Long countConfirmedByEventId(@Param("event_id")Long eventId);
 
-
     Long countByEventAndStatus(Event event, StatusRequest status);
 
-    ParticipationRequest findParticipationRequestByRequesterAndStatus(Long requesterId, StatusRequest status);
+    ParticipationRequest findParticipationRequestByRequesterAndStatus(User requester, StatusRequest status);
 }

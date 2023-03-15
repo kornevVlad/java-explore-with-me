@@ -67,13 +67,13 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void deleteCompilation(Long compId) {
-        getValidCompilation(compId);
+        getCompilation(compId);
         compilationRepository.deleteById(compId);
     }
 
     @Override
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequestDto updateCompilationRequestDto) {
-        Compilation compilation = getValidCompilation(compId);
+        Compilation compilation = getCompilation(compId);
         List<Event> events = new ArrayList<>();
         if (updateCompilationRequestDto.getEvents() != null) {
             events = eventRepository.getAllByEvents(updateCompilationRequestDto.getEvents());
@@ -92,7 +92,7 @@ public class CompilationServiceImpl implements CompilationService {
                 client.setViewsToEventsShortDto(eventShortDtos));
     }
 
-    private Compilation getValidCompilation(Long id) {
+    private Compilation getCompilation(Long id) {
         Optional<Compilation> compilation = compilationRepository.findById(id);
         if (compilation.isEmpty()) {
             throw new NotFoundException("Compilation with id=" + id + " was not found");

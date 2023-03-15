@@ -77,12 +77,12 @@ public class CompilationPublicServiceImpl implements CompilationPublicService {
         if (id == null) {
             throw new BadRequestException("BAD REQUEST COMPILATION ID");
         }
-        Compilation compilation = getValidCompilation(id);
+        Compilation compilation = getCompilation(id);
         List<EventShortDto> eventShortDtos = getEvents(compilation.getEvents());
         return compilationMapper.toCompilationDto(compilation, client.setViewsToEventsShortDto(eventShortDtos));
     }
 
-    private Compilation getValidCompilation(Long id) {
+    private Compilation getCompilation(Long id) {
         Optional<Compilation> compilation = compilationRepository.findById(id);
         if (compilation.isEmpty()) {
             throw new NotFoundException("Compilation with id=" + id + " was not found");

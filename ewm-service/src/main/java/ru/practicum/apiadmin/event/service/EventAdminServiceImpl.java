@@ -52,12 +52,12 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     @Override
     public EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequestDto updateEventAdminRequestDto) {
-        Event event = getValidEvent(eventId);
+        Event event = getEvent(eventId);
         if (updateEventAdminRequestDto.getAnnotation() != null) {
             event.setAnnotation(updateEventAdminRequestDto.getAnnotation());
         }
         if (updateEventAdminRequestDto.getCategory() != null) {
-            Category category = getValidCategory(updateEventAdminRequestDto.getCategory());
+            Category category = getCategory(updateEventAdminRequestDto.getCategory());
             event.setCategory(category);
         }
         if (updateEventAdminRequestDto.getDescription() != null) {
@@ -150,7 +150,7 @@ public class EventAdminServiceImpl implements EventAdminService {
         return eventFullDtos;
     }
 
-    private Event getValidEvent(Long eventId) {
+    private Event getEvent(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new NotFoundException("NOT FOUND");
@@ -158,7 +158,7 @@ public class EventAdminServiceImpl implements EventAdminService {
         return event.get();
     }
 
-    private Category getValidCategory(Long categoryId) {
+    private Category getCategory(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
             throw new NotFoundException("Not found");
