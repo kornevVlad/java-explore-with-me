@@ -57,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public ResponseCommentDto createComment(Long userId, Long eventId, RequestCommentDto requestCommentDto) {
-        User user = getValidUser(userId);
+        User user = getUser(userId);
         Event event = getEvent(eventId);
         checkStatusConfirmed(user); //проверка user по статусу
         Comment comment = commentMapper.toComment(user, event, requestCommentDto);
@@ -67,9 +67,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public ResponseCommentDto updateComment(Long userId, Long commentId, RequestCommentDto requestCommentDto) {
         //обновить комментарий в статусах PENDING и REJECTED
-        User user = getValidUser(userId);
+        User user = getUser(userId);
         Comment comment = getComment(commentId);
         if (comment.getStatus().equals(StatusComment.PUBLISH)) {
             throw new BadRequestException("We do not change the published comment");
@@ -84,7 +85,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public ResponseCommentDto getCommentByUserId(Long userId, Long commentId) {
-        User user = getValidUser(userId);
+        User user = getUser(userId);
         Comment comment = getComment(commentId);
         if (!comment.getUser().getId().equals(user.getId())) {
             throw new BadRequestException("BAD REQUEST USER NO COMMENT");
@@ -95,7 +96,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<ResponseCommentDto> getAllCommentByUser(Long userId) {
-        User user = getValidUser(userId);
+        User user = getUser(userId);
         List<ResponseCommentDto> commentsDto = new ArrayList<>();
         commentRepository.findAllByUserId(user.getId())
                 .forEach(comment -> commentsDto.add(commentMapper.toResponseCommentDto(comment)));
@@ -117,6 +118,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public ResponseCommentDto updateModerationStatus(Long commentId, CommentModerationDto commentModerationDto) {
         Comment comment = getComment(commentId);
         //не подходящий статус для модерации
@@ -142,9 +144,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void deleteCommentByUser(Long userId, Long commentId) {
         //комментарий удаляется в статусе PENDING или REJECTED
-        User user = getValidUser(userId);
+        User user = getUser(userId);
         Comment comment = getComment(commentId);
         if (comment.getStatus().equals(StatusComment.PUBLISH)) {
             log.error("Опубликованный комментарий не удаляется");
@@ -159,6 +162,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public void deleteCommentByAdmin(Long commentId) {
         //комментрай удаляется в любом статусе
         Optional<Comment> comment = commentRepository.findById(commentId);
@@ -168,7 +172,7 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    private User getValidUser(Long userid) {
+    private User getUser(Long userid) {
         Optional<User> user = userRepository.findById(userid);
         if (user.isEmpty()) {
             throw new NotFoundException("NOT FOUND USER");
