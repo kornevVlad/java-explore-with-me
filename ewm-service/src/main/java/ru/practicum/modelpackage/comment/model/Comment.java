@@ -32,6 +32,7 @@ public class Comment {
     @Column(name = "publish")
     private LocalDateTime publishDateTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private StatusComment status;
 }

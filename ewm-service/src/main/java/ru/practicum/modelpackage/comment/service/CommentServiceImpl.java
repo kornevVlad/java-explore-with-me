@@ -97,12 +97,8 @@ public class CommentServiceImpl implements CommentService {
     public List<ResponseCommentDto> getAllCommentByUser(Long userId) {
         User user = getValidUser(userId);
         List<ResponseCommentDto> commentsDto = new ArrayList<>();
-        List<Comment> comments = commentRepository.findAllByUserId(user.getId());
-        if (!comments.isEmpty()) {
-            for (Comment comment : comments) {
-                commentsDto.add(commentMapper.toResponseCommentDto(comment));
-            }
-        }
+        commentRepository.findAllByUserId(user.getId())
+                .forEach(comment -> commentsDto.add(commentMapper.toResponseCommentDto(comment)));
         log.info("Получен список комментариев пользователя с id {} список = {}", userId, commentsDto);
         return commentsDto;
     }
@@ -113,14 +109,9 @@ public class CommentServiceImpl implements CommentService {
         //При других статусах выводить пустой список
         Event event = getEvent(eventId);
         List<ResponseCommentDto> commentsDto = new ArrayList<>();
-        List<Comment> comments;
         if (event.getState().equals(StatusEvent.PUBLISHED)) {
-            comments = commentRepository.findAllByEventId(eventId);
-            if (!comments.isEmpty()) {
-                for (Comment comment : comments) {
-                    commentsDto.add(commentMapper.toResponseCommentDto(comment));
-                }
-            }
+            commentRepository.findAllByEventId(eventId)
+                    .forEach(comment -> commentsDto.add(commentMapper.toResponseCommentDto(comment)));
         }
         return commentsDto;
     }
