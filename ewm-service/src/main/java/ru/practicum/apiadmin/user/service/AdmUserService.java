@@ -1,6 +1,6 @@
 package ru.practicum.apiadmin.user.service;
 
-import ru.practicum.model.user.dto.UserDto;
+import ru.practicum.modelpackage.user.dto.UserDto;
 
 import java.util.List;
 

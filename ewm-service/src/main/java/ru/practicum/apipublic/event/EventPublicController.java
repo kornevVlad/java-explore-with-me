@@ -3,8 +3,8 @@ package ru.practicum.apipublic.event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.apipublic.event.service.EventPublicService;
-import ru.practicum.model.event.dto.EventFullDto;
-import ru.practicum.model.event.dto.EventShortDto;
+import ru.practicum.modelpackage.event.dto.EventFullDto;
+import ru.practicum.modelpackage.event.dto.EventShortDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

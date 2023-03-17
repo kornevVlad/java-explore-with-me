@@ -1,7 +1,7 @@
 package ru.practicum.apiadmin.category.service;
 
-import ru.practicum.model.categories.dto.CategoryDto;
-import ru.practicum.model.categories.dto.NewCategoryDto;
+import ru.practicum.modelpackage.categories.dto.CategoryDto;
+import ru.practicum.modelpackage.categories.dto.NewCategoryDto;
 
 public interface AdmCategoryService {
 

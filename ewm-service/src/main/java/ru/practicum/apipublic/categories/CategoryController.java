@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.apipublic.categories.service.CategoryService;
-import ru.practicum.model.categories.dto.CategoryDto;
+import ru.practicum.modelpackage.categories.dto.CategoryDto;
 
 import java.util.List;
 

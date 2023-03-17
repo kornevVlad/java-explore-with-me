@@ -2,7 +2,7 @@ package ru.practicum.mapper;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.HitDto;
-import ru.practicum.model.Hit;
+import ru.practicum.modelpackage.Hit;
 
 
 @Component

@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.HitDto;
 import ru.practicum.mapper.StatsMapper;
-import ru.practicum.model.Hit;
-import ru.practicum.model.Stats;
+import ru.practicum.modelpackage.Hit;
+import ru.practicum.modelpackage.Stats;
 import ru.practicum.repository.StatisticRepository;
 
 
