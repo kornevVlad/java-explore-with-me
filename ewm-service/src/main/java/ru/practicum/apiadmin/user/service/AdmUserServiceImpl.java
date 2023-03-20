@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.model.user.mapper.UserMapper;
-import ru.practicum.model.user.model.User;
-import ru.practicum.model.user.repository.UserRepository;
-import ru.practicum.model.user.dto.UserDto;
+import ru.practicum.modelpackage.user.mapper.UserMapper;
+import ru.practicum.modelpackage.user.model.User;
+import ru.practicum.modelpackage.user.repository.UserRepository;
+import ru.practicum.modelpackage.user.dto.UserDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;

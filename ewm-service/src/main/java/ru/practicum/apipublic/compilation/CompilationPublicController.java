@@ -4,7 +4,7 @@ package ru.practicum.apipublic.compilation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.apipublic.compilation.service.CompilationPublicService;
-import ru.practicum.model.compilation.dto.CompilationDto;
+import ru.practicum.modelpackage.compilation.dto.CompilationDto;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

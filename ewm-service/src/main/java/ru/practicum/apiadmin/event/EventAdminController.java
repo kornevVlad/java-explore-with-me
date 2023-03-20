@@ -3,9 +3,9 @@ package ru.practicum.apiadmin.event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.apiadmin.event.service.EventAdminService;
-import ru.practicum.model.event.dto.EventFullDto;
-import ru.practicum.model.event.dto.UpdateEventAdminRequestDto;
-import ru.practicum.model.event.status_event.StatusEvent;
+import ru.practicum.modelpackage.event.dto.EventFullDto;
+import ru.practicum.modelpackage.event.dto.UpdateEventAdminRequestDto;
+import ru.practicum.modelpackage.event.status_event.StatusEvent;
 
 import java.util.List;
 

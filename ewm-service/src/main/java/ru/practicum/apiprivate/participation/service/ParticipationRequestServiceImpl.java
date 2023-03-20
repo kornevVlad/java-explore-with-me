@@ -6,16 +6,16 @@ import org.springframework.stereotype.Service;
 import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.model.event.model.Event;
-import ru.practicum.model.event.repository.EventRepository;
-import ru.practicum.model.event.status_event.StatusEvent;
-import ru.practicum.model.participation.dto.ParticipationRequestDto;
-import ru.practicum.model.participation.mapper.RequestMapper;
-import ru.practicum.model.participation.model.ParticipationRequest;
-import ru.practicum.model.participation.repository.RequestRepository;
-import ru.practicum.model.participation.status_request.StatusRequest;
-import ru.practicum.model.user.model.User;
-import ru.practicum.model.user.repository.UserRepository;
+import ru.practicum.modelpackage.event.model.Event;
+import ru.practicum.modelpackage.event.repository.EventRepository;
+import ru.practicum.modelpackage.event.status_event.StatusEvent;
+import ru.practicum.modelpackage.participation.dto.ParticipationRequestDto;
+import ru.practicum.modelpackage.participation.mapper.RequestMapper;
+import ru.practicum.modelpackage.participation.model.ParticipationRequest;
+import ru.practicum.modelpackage.participation.repository.RequestRepository;
+import ru.practicum.modelpackage.participation.status_request.StatusRequest;
+import ru.practicum.modelpackage.user.model.User;
+import ru.practicum.modelpackage.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +45,8 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
     @Override
     public ParticipationRequestDto addRequestByUser(Long userId, Long eventId) {
-        Event event = getValidEvent(eventId);
-        User user = getValidUser(userId);
+        Event event = getEvent(eventId);
+        User user = getUser(userId);
         StatusEvent status = StatusEvent.PUBLISHED;
         validUserAndEvent(user, event, status);
         ParticipationRequest participationRequest;
@@ -81,8 +81,8 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
 
     @Override
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
-        getValidUser(userId);
-        ParticipationRequest participationRequest = getValidRequestByUserId(userId, requestId);
+        getUser(userId);
+        ParticipationRequest participationRequest = getRequestByUserId(userId, requestId);
         participationRequest.setStatus(StatusRequest.CANCELED);
         log.info("Статус запроса изменен ={}", participationRequest);
         return requestMapper.toParticipationRequestDto(requestRepository.save(participationRequest));
@@ -91,7 +91,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     /**
      *Валидация пользователя
      */
-    private User getValidUser(Long userId) {
+    private User getUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new BadRequestException("Failed to convert value of type java.lang.String" +
@@ -104,7 +104,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     /**
      *Валидация события
      */
-    private Event getValidEvent(Long eventId) {
+    private Event getEvent(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new NotFoundException("Event with id=" + eventId + " was not found");
@@ -115,7 +115,7 @@ public class ParticipationRequestServiceImpl implements ParticipationRequestServ
     /**
      * Валидация запроса
      */
-    private ParticipationRequest getValidRequestByUserId(Long userId, Long requestId) {
+    private ParticipationRequest getRequestByUserId(Long userId, Long requestId) {
         Optional<ParticipationRequest> participationRequest = requestRepository.findById(requestId);
         if (participationRequest.isEmpty()) {
             throw new NotFoundException("Request with id=" + requestId + " was not found");

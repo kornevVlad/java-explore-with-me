@@ -2,7 +2,7 @@ package ru.practicum.service;
 
 
 import ru.practicum.HitDto;
-import ru.practicum.model.Stats;
+import ru.practicum.modelpackage.Stats;
 
 import java.util.List;
 

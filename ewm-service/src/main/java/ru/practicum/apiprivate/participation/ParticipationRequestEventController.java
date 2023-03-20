@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.apiprivate.participation.service.ParticipationRequestService;
-import ru.practicum.model.participation.dto.ParticipationRequestDto;
+import ru.practicum.modelpackage.participation.dto.ParticipationRequestDto;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;

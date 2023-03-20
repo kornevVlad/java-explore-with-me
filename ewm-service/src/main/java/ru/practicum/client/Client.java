@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.practicum.StatsClient;
 import ru.practicum.StatsDto;
-import ru.practicum.model.event.dto.EventFullDto;
-import ru.practicum.model.event.dto.EventShortDto;
+import ru.practicum.modelpackage.event.dto.EventFullDto;
+import ru.practicum.modelpackage.event.dto.EventShortDto;
 
 import java.util.*;
 

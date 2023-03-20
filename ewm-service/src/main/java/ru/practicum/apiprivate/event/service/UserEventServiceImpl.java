@@ -10,26 +10,26 @@ import ru.practicum.client.Client;
 import ru.practicum.exception.BadRequestException;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.model.categories.model.Category;
-import ru.practicum.model.categories.repository.CategoryRepository;
-import ru.practicum.model.event.dto.EventFullDto;
-import ru.practicum.model.event.dto.EventShortDto;
-import ru.practicum.model.event.dto.NewEventDto;
-import ru.practicum.model.event.dto.UpdateEventUserRequestDto;
-import ru.practicum.model.event.mapper.EventMapper;
-import ru.practicum.model.event.model.Event;
-import ru.practicum.model.event.repository.EventRepository;
-import ru.practicum.model.event.status_event.StatusEvent;
-import ru.practicum.model.event.status_event.UserStatusEvent;
-import ru.practicum.model.participation.dto.ParticipationRequestDto;
-import ru.practicum.model.participation.mapper.RequestMapper;
-import ru.practicum.model.participation.model.EventRequestStatusUpdateRequest;
-import ru.practicum.model.participation.model.EventRequestStatusUpdateResult;
-import ru.practicum.model.participation.model.ParticipationRequest;
-import ru.practicum.model.participation.repository.RequestRepository;
-import ru.practicum.model.participation.status_request.StatusRequest;
-import ru.practicum.model.user.model.User;
-import ru.practicum.model.user.repository.UserRepository;
+import ru.practicum.modelpackage.categories.model.Category;
+import ru.practicum.modelpackage.categories.repository.CategoryRepository;
+import ru.practicum.modelpackage.event.dto.EventFullDto;
+import ru.practicum.modelpackage.event.dto.EventShortDto;
+import ru.practicum.modelpackage.event.dto.NewEventDto;
+import ru.practicum.modelpackage.event.dto.UpdateEventUserRequestDto;
+import ru.practicum.modelpackage.event.mapper.EventMapper;
+import ru.practicum.modelpackage.event.model.Event;
+import ru.practicum.modelpackage.event.repository.EventRepository;
+import ru.practicum.modelpackage.event.status_event.StatusEvent;
+import ru.practicum.modelpackage.event.status_event.UserStatusEvent;
+import ru.practicum.modelpackage.participation.dto.ParticipationRequestDto;
+import ru.practicum.modelpackage.participation.mapper.RequestMapper;
+import ru.practicum.modelpackage.participation.model.EventRequestStatusUpdateRequest;
+import ru.practicum.modelpackage.participation.model.EventRequestStatusUpdateResult;
+import ru.practicum.modelpackage.participation.model.ParticipationRequest;
+import ru.practicum.modelpackage.participation.repository.RequestRepository;
+import ru.practicum.modelpackage.participation.status_request.StatusRequest;
+import ru.practicum.modelpackage.user.model.User;
+import ru.practicum.modelpackage.user.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -77,8 +77,8 @@ public class UserEventServiceImpl implements UserEventService {
 
     @Override
     public EventFullDto createEvent(Long userId, NewEventDto newEventDto) {
-        User user = getValidUser(userId);
-        Category category = getValidCategory(newEventDto.getCategory());
+        User user = getUser(userId);
+        Category category = getCategory(newEventDto.getCategory());
         Event event = eventMapper.toEvent(newEventDto, user, category);
         if (newEventDto.getEventDate() != null
                 &&  event.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
@@ -100,7 +100,7 @@ public class UserEventServiceImpl implements UserEventService {
 
     @Override
     public List<EventShortDto> getAllEventsByUserId(Long userId, Integer from, Integer size) {
-        getValidUser(userId);
+        getUser(userId);
         Pageable pageable = PageRequest.of(from, size);
         List<Event> events = eventRepository.findByInitiatorId(userId, pageable);
         List<EventShortDto> eventsShortDto = new ArrayList<>();
@@ -114,8 +114,8 @@ public class UserEventServiceImpl implements UserEventService {
 
     @Override
     public EventFullDto getEventByUserId(Long userId, Long eventId) {
-        Event event = getValidEvent(eventId);
-        User user = getValidUser(userId);
+        Event event = getEvent(eventId);
+        User user = getUser(userId);
         if (!event.getInitiator().getId().equals(user.getId())) {
             throw new BadRequestException("USER DID NOT FIND THE EVENT");
         }
@@ -129,8 +129,8 @@ public class UserEventServiceImpl implements UserEventService {
     public EventFullDto updateEventByUserId(Long userId, Long eventId,
                                             UpdateEventUserRequestDto updateEventUserRequestDto) {
         log.info("Обновление события: данные для обновления = {}", updateEventUserRequestDto);
-        Event event = getValidEvent(eventId);
-        getValidUser(userId);
+        Event event = getEvent(eventId);
+        getUser(userId);
         //Проверка подходящих статусов
         if (updateEventUserRequestDto.getStateAction() == null) {
             throw new ConflictException("CONFLICT STATUS NULL");
@@ -140,7 +140,7 @@ public class UserEventServiceImpl implements UserEventService {
         }
         if (updateEventUserRequestDto.getCategory() != null) {
             //добавить валидацию
-            Category category = getValidCategory(updateEventUserRequestDto.getCategory());
+            Category category = getCategory(updateEventUserRequestDto.getCategory());
             event.setCategory(category);
         }
         if (updateEventUserRequestDto.getDescription() != null) {
@@ -187,7 +187,7 @@ public class UserEventServiceImpl implements UserEventService {
 
     @Override
     public List<ParticipationRequestDto> getRequestsInEventByUserId(Long userId, Long eventId) {
-        Event event = getValidEvent(eventId);
+        Event event = getEvent(eventId);
         if (!event.getInitiator().getId().equals(userId)) {
             throw new BadRequestException("Failed to convert value of type java.lang.String to required type int;" +
                     " nested exception is java.lang.NumberFormatException: For input string: ad");
@@ -204,11 +204,11 @@ public class UserEventServiceImpl implements UserEventService {
     public EventRequestStatusUpdateResult updateStatusRequest(Long userId, Long eventId,
                                                              EventRequestStatusUpdateRequest ids) {
 
-        Event event = getValidEvent(eventId);
-        getValidUser(userId);
+        Event event = getEvent(eventId);
+        getUser(userId);
         EventRequestStatusUpdateResult statusResult = new EventRequestStatusUpdateResult();
         for (Long id : ids.getRequestIds()) {
-            ParticipationRequest request = getValidRequest(id);
+            ParticipationRequest request = getRequest(id);
             if (requestRepository.countByEventAndStatus(event, StatusRequest.CONFIRMED) >= event.getParticipantLimit()) {
                 throw new ConflictException("LIMIT REQUEST");
             }
@@ -242,7 +242,7 @@ public class UserEventServiceImpl implements UserEventService {
         return st;
     }
 
-    private Event getValidEvent(Long eventId) {
+    private Event getEvent(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new NotFoundException("Not Found event");
@@ -250,7 +250,7 @@ public class UserEventServiceImpl implements UserEventService {
         return event.get();
     }
 
-    private User getValidUser(Long userId) {
+    private User getUser(Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new NotFoundException("Not Found user");
@@ -258,7 +258,7 @@ public class UserEventServiceImpl implements UserEventService {
         return user.get();
     }
 
-    private ParticipationRequest getValidRequest(Long requestId) {
+    private ParticipationRequest getRequest(Long requestId) {
         Optional<ParticipationRequest> request = requestRepository.findById(requestId);
         if (request.isEmpty()) {
             throw new NotFoundException("Not Found request");
@@ -266,7 +266,7 @@ public class UserEventServiceImpl implements UserEventService {
         return request.get();
     }
 
-    private Category getValidCategory(Long categoryId) {
+    private Category getCategory(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
             throw new NotFoundException("Not Found category");

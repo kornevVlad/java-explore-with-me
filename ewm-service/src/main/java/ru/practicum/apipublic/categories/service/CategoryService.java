@@ -1,6 +1,6 @@
 package ru.practicum.apipublic.categories.service;
 
-import ru.practicum.model.categories.dto.CategoryDto;
+import ru.practicum.modelpackage.categories.dto.CategoryDto;
 
 import java.util.List;
 

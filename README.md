@@ -1,2 +1,4 @@
 # java-explore-with-me
-Template repository for ExploreWithMe project.
+Запустить постман коллекцию feature.json после выполнениня основных тестов!!!!!!!
+
+Ссылка на пул реквест  https://github.com/kornevVlad/java-explore-with-me/pull/3

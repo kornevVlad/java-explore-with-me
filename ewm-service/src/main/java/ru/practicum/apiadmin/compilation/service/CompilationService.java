@@ -1,8 +1,8 @@
 package ru.practicum.apiadmin.compilation.service;
 
-import ru.practicum.model.compilation.dto.CompilationDto;
-import ru.practicum.model.compilation.dto.NewCompilationDto;
-import ru.practicum.model.compilation.dto.UpdateCompilationRequestDto;
+import ru.practicum.modelpackage.compilation.dto.CompilationDto;
+import ru.practicum.modelpackage.compilation.dto.NewCompilationDto;
+import ru.practicum.modelpackage.compilation.dto.UpdateCompilationRequestDto;
 
 public interface CompilationService {
 

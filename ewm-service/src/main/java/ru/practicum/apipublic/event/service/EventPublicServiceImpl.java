@@ -9,14 +9,14 @@ import ru.practicum.StatsClient;
 import ru.practicum.client.Client;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.model.event.dto.EventFullDto;
-import ru.practicum.model.event.dto.EventShortDto;
-import ru.practicum.model.event.mapper.EventMapper;
-import ru.practicum.model.event.model.Event;
-import ru.practicum.model.event.model.QEvent;
-import ru.practicum.model.event.repository.EventRepository;
-import ru.practicum.model.event.status_event.StatusEvent;
-import ru.practicum.model.participation.repository.RequestRepository;
+import ru.practicum.modelpackage.event.dto.EventFullDto;
+import ru.practicum.modelpackage.event.dto.EventShortDto;
+import ru.practicum.modelpackage.event.mapper.EventMapper;
+import ru.practicum.modelpackage.event.model.Event;
+import ru.practicum.modelpackage.event.model.QEvent;
+import ru.practicum.modelpackage.event.repository.EventRepository;
+import ru.practicum.modelpackage.event.status_event.StatusEvent;
+import ru.practicum.modelpackage.participation.repository.RequestRepository;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +54,7 @@ public class EventPublicServiceImpl implements EventPublicService {
 
     @Override
     public EventFullDto getEventByEventId(Long eventId, HttpServletRequest httpServletRequest) {
-        Event event = getValidEvent(eventId);
+        Event event = getEvent(eventId);
         if (!event.getState().equals(StatusEvent.PUBLISHED)) {
             throw new ConflictException("STATUS BAD");
         }
@@ -114,7 +114,7 @@ public class EventPublicServiceImpl implements EventPublicService {
         return eventShortDtos;
     }
 
-    private Event getValidEvent(Long eventId) {
+    private Event getEvent(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new NotFoundException("NOT FOUND EVENT_ID " + eventId);

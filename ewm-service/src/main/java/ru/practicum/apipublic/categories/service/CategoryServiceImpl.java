@@ -6,10 +6,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.exception.BadRequestException;
-import ru.practicum.model.categories.dto.CategoryDto;
-import ru.practicum.model.categories.mapper.CategoryMapper;
-import ru.practicum.model.categories.model.Category;
-import ru.practicum.model.categories.repository.CategoryRepository;
+import ru.practicum.modelpackage.categories.dto.CategoryDto;
+import ru.practicum.modelpackage.categories.mapper.CategoryMapper;
+import ru.practicum.modelpackage.categories.model.Category;
+import ru.practicum.modelpackage.categories.repository.CategoryRepository;
 import ru.practicum.exception.NotFoundException;
 
 import java.util.ArrayList;

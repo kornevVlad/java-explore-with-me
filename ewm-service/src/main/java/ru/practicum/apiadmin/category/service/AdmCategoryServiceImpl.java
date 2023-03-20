@@ -4,12 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.model.categories.dto.CategoryDto;
-import ru.practicum.model.categories.dto.NewCategoryDto;
-import ru.practicum.model.categories.mapper.CategoryMapper;
-import ru.practicum.model.categories.model.Category;
-import ru.practicum.model.categories.repository.CategoryRepository;
-import ru.practicum.model.event.repository.EventRepository;
+import ru.practicum.modelpackage.categories.dto.CategoryDto;
+import ru.practicum.modelpackage.categories.dto.NewCategoryDto;
+import ru.practicum.modelpackage.categories.mapper.CategoryMapper;
+import ru.practicum.modelpackage.categories.model.Category;
+import ru.practicum.modelpackage.categories.repository.CategoryRepository;
+import ru.practicum.modelpackage.event.repository.EventRepository;
 
 import java.util.Optional;
 
@@ -47,7 +47,7 @@ public class AdmCategoryServiceImpl implements AdmCategoryService {
 
     @Override
     public void deleteCategory(Long id) {
-        getValidCategory(id);
+        getCategory(id);
         Long ids = eventRepository.countByCategoryId(id);
         if (ids > 0) {
             throw new ConflictException("The category is not empty");
@@ -57,7 +57,7 @@ public class AdmCategoryServiceImpl implements AdmCategoryService {
 
     @Override
     public CategoryDto updateCategory(NewCategoryDto newCategoryDto, Long id) {
-        Category updateCategory = getValidCategory(id);
+        Category updateCategory = getCategory(id);
         Category newCategory = mapper.toCategory(newCategoryDto);
         updateCategory.setName(newCategory.getName());
         log.info("Обновленная кетегория = {}", updateCategory);
@@ -71,7 +71,7 @@ public class AdmCategoryServiceImpl implements AdmCategoryService {
         }
     }
 
-    private Category getValidCategory(Long id) {
+    private Category getCategory(Long id) {
         Optional<Category> category = repository.findById(id);
         if (category.isEmpty()) {
             log.error("Категория не найдена id={}", id);

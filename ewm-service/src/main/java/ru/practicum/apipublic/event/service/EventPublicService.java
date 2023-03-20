@@ -1,8 +1,8 @@
 package ru.practicum.apipublic.event.service;
 
 
-import ru.practicum.model.event.dto.EventFullDto;
-import ru.practicum.model.event.dto.EventShortDto;
+import ru.practicum.modelpackage.event.dto.EventFullDto;
+import ru.practicum.modelpackage.event.dto.EventShortDto;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

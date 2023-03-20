@@ -1,12 +1,12 @@
 package ru.practicum.apiprivate.event.service;
 
-import ru.practicum.model.event.dto.EventFullDto;
-import ru.practicum.model.event.dto.EventShortDto;
-import ru.practicum.model.event.dto.NewEventDto;
-import ru.practicum.model.event.dto.UpdateEventUserRequestDto;
-import ru.practicum.model.participation.dto.ParticipationRequestDto;
-import ru.practicum.model.participation.model.EventRequestStatusUpdateRequest;
-import ru.practicum.model.participation.model.EventRequestStatusUpdateResult;
+import ru.practicum.modelpackage.event.dto.EventFullDto;
+import ru.practicum.modelpackage.event.dto.EventShortDto;
+import ru.practicum.modelpackage.event.dto.NewEventDto;
+import ru.practicum.modelpackage.event.dto.UpdateEventUserRequestDto;
+import ru.practicum.modelpackage.participation.dto.ParticipationRequestDto;
+import ru.practicum.modelpackage.participation.model.EventRequestStatusUpdateRequest;
+import ru.practicum.modelpackage.participation.model.EventRequestStatusUpdateResult;
 
 import java.util.List;
 

@@ -9,18 +9,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.model.categories.model.Category;
-import ru.practicum.model.categories.repository.CategoryRepository;
-import ru.practicum.model.event.dto.EventFullDto;
-import ru.practicum.model.event.dto.UpdateEventAdminRequestDto;
-import ru.practicum.model.event.mapper.EventMapper;
-import ru.practicum.model.event.model.Event;
+import ru.practicum.modelpackage.categories.model.Category;
+import ru.practicum.modelpackage.categories.repository.CategoryRepository;
+import ru.practicum.modelpackage.event.dto.EventFullDto;
+import ru.practicum.modelpackage.event.dto.UpdateEventAdminRequestDto;
+import ru.practicum.modelpackage.event.mapper.EventMapper;
+import ru.practicum.modelpackage.event.model.Event;
 
-import ru.practicum.model.event.model.QEvent;
-import ru.practicum.model.event.repository.EventRepository;
-import ru.practicum.model.event.status_event.AdminStatusEvent;
-import ru.practicum.model.event.status_event.StatusEvent;
-import ru.practicum.model.participation.repository.RequestRepository;
+import ru.practicum.modelpackage.event.model.QEvent;
+import ru.practicum.modelpackage.event.repository.EventRepository;
+import ru.practicum.modelpackage.event.status_event.AdminStatusEvent;
+import ru.practicum.modelpackage.event.status_event.StatusEvent;
+import ru.practicum.modelpackage.participation.repository.RequestRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -52,12 +52,12 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     @Override
     public EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequestDto updateEventAdminRequestDto) {
-        Event event = getValidEvent(eventId);
+        Event event = getEvent(eventId);
         if (updateEventAdminRequestDto.getAnnotation() != null) {
             event.setAnnotation(updateEventAdminRequestDto.getAnnotation());
         }
         if (updateEventAdminRequestDto.getCategory() != null) {
-            Category category = getValidCategory(updateEventAdminRequestDto.getCategory());
+            Category category = getCategory(updateEventAdminRequestDto.getCategory());
             event.setCategory(category);
         }
         if (updateEventAdminRequestDto.getDescription() != null) {
@@ -150,7 +150,7 @@ public class EventAdminServiceImpl implements EventAdminService {
         return eventFullDtos;
     }
 
-    private Event getValidEvent(Long eventId) {
+    private Event getEvent(Long eventId) {
         Optional<Event> event = eventRepository.findById(eventId);
         if (event.isEmpty()) {
             throw new NotFoundException("NOT FOUND");
@@ -158,7 +158,7 @@ public class EventAdminServiceImpl implements EventAdminService {
         return event.get();
     }
 
-    private Category getValidCategory(Long categoryId) {
+    private Category getCategory(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isEmpty()) {
             throw new NotFoundException("Not found");

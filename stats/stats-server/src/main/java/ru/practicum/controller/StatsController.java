@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.HitDto;
-import ru.practicum.model.Stats;
+import ru.practicum.modelpackage.Stats;
 import ru.practicum.service.StatsService;
 
 import java.util.List;

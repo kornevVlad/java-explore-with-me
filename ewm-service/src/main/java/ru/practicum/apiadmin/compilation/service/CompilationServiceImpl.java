@@ -5,17 +5,17 @@ import org.springframework.stereotype.Service;
 import ru.practicum.client.Client;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.model.compilation.dto.CompilationDto;
-import ru.practicum.model.compilation.dto.NewCompilationDto;
-import ru.practicum.model.compilation.dto.UpdateCompilationRequestDto;
-import ru.practicum.model.compilation.mapper.CompilationMapper;
-import ru.practicum.model.compilation.model.Compilation;
-import ru.practicum.model.compilation.repository.CompilationRepository;
-import ru.practicum.model.event.dto.EventShortDto;
-import ru.practicum.model.event.mapper.EventMapper;
-import ru.practicum.model.event.model.Event;
-import ru.practicum.model.event.repository.EventRepository;
-import ru.practicum.model.participation.repository.RequestRepository;
+import ru.practicum.modelpackage.compilation.dto.CompilationDto;
+import ru.practicum.modelpackage.compilation.dto.NewCompilationDto;
+import ru.practicum.modelpackage.compilation.dto.UpdateCompilationRequestDto;
+import ru.practicum.modelpackage.compilation.mapper.CompilationMapper;
+import ru.practicum.modelpackage.compilation.model.Compilation;
+import ru.practicum.modelpackage.compilation.repository.CompilationRepository;
+import ru.practicum.modelpackage.event.dto.EventShortDto;
+import ru.practicum.modelpackage.event.mapper.EventMapper;
+import ru.practicum.modelpackage.event.model.Event;
+import ru.practicum.modelpackage.event.repository.EventRepository;
+import ru.practicum.modelpackage.participation.repository.RequestRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,13 +67,13 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public void deleteCompilation(Long compId) {
-        getValidCompilation(compId);
+        getCompilation(compId);
         compilationRepository.deleteById(compId);
     }
 
     @Override
     public CompilationDto updateCompilation(Long compId, UpdateCompilationRequestDto updateCompilationRequestDto) {
-        Compilation compilation = getValidCompilation(compId);
+        Compilation compilation = getCompilation(compId);
         List<Event> events = new ArrayList<>();
         if (updateCompilationRequestDto.getEvents() != null) {
             events = eventRepository.getAllByEvents(updateCompilationRequestDto.getEvents());
@@ -92,7 +92,7 @@ public class CompilationServiceImpl implements CompilationService {
                 client.setViewsToEventsShortDto(eventShortDtos));
     }
 
-    private Compilation getValidCompilation(Long id) {
+    private Compilation getCompilation(Long id) {
         Optional<Compilation> compilation = compilationRepository.findById(id);
         if (compilation.isEmpty()) {
             throw new NotFoundException("Compilation with id=" + id + " was not found");
